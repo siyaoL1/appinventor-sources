@@ -32,6 +32,8 @@ Blockly.Yail.RESERVED_WORDS_ = '';
 Blockly.Yail.ORDER_ATOMIC = 0;         // 0 "" ...
 Blockly.Yail.ORDER_NONE = 99;          // (...)
 
+Blockly.Yail.YAIL_FILTEROVEREACH = "(filterovereach ";
+Blockly.Yail.YAIL_MAPOVEREACH = "(mapovereach ";
 Blockly.Yail.YAIL_ADD_COMPONENT = "(add-component ";
 Blockly.Yail.YAIL_ADD_TO_LIST = "(add-to-list ";
 Blockly.Yail.YAIL_BEGIN = "(begin ";
@@ -73,7 +75,7 @@ Blockly.Yail.YAIL_NULL = "(get-var *the-null-value*)";
 Blockly.Yail.YAIL_EMPTY_LIST = "'()";
 Blockly.Yail.YAIL_OPEN_BLOCK = "(";
 Blockly.Yail.YAIL_OPEN_COMBINATION = "(";
-Blockly.Yail.YAIL_QUOTE = "'";
+;Blockly.Yail.YAIL_QUOTE = "'";
 Blockly.Yail.YAIL_RENAME_COMPONENT = "(rename-component ";
 Blockly.Yail.YAIL_SET_AND_COERCE_PROPERTY = "(set-and-coerce-property! ";
 Blockly.Yail.YAIL_SET_AND_COERCE_COMPONENT_TYPE_PROPERTY = "(set-and-coerce-property-and-check! ";

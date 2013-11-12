@@ -433,3 +433,761 @@ Blockly.Blocks['lists_lookup_in_pairs'] = {
   },
   typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_LOOKUP_IN_PAIRS_TITLE_LOOKUP_IN_PAIRS }]
 };
+
+
+$$$$$$$$$$$$$
+
+Blockly.Blocks['lists_mutatorcontainer'] = {
+  init: function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    var group = new Blockly.RadioButtonGroup();
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldRadioButton(group), 'CHANGE_LIST')
+        .appendField("changes existing list");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldRadioButton(group), 'MAKE_NEW_LIST')
+        .appendField("makes new list");
+    this.setTooltip(Blockly.LANG_CONTROLS_IF_ELSEIF_TOOLTIP);
+    this.contextMenu = false;
+  }
+};
+
+Blockly.Blocks['lists_map'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_MAP_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+       .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+       .appendField(Blockly.Msg.LANG_LISTS_MAP_DEST_TITLE_MAP, 'TITLE')
+       .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_ITEM)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_MAP_INPUT_VAR,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR')
+        .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_TO)
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendIndentedValueInput('TO');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setMutator(new Blockly.Mutator([]));
+    this.setTooltip(Blockly.Msg.LANG_LISTS_MAP_TOOLTIP);
+    this.changeList = true;
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TO');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_DEST_TITLE_MAP, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_ITEM)
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_MAP_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_TO)
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('TO');
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TO');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_NONDEST_TITLE_MAP, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_ITEM)
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_MAP_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_TO)
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('TO');
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    }     
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    }    
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }    
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  getVars: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  blocksInScope: function() {
+    var toBlock = this.getInputTargetBlock('TO');
+    if (toBlock) {
+      return [toBlock];
+    } else {
+      return [];
+    }
+  },
+  declaredNames: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  renameVar: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
+      this.setFieldValue(newName, 'VAR');
+    }
+  },
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_MAP_INPUT_COLLAPSED_TEXT }]
+};
+
+
+Blockly.Blocks['lists_filter'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_MAP_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_FILTER_DEST_TITLE_FILTER, 'TITLE')
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_ITEM)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_FILTER_INPUT_VAR,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR')
+      .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_PASSING)
+      .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendIndentedValueInput('TEST')
+        .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_TEST);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setMutator(new Blockly.Mutator([]));
+    this.setTooltip(Blockly.Msg.LANG_LISTS_FILTER_TOOLTIP);
+    this.changeList = true;
+  },
+  //  onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TEST');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_DEST_TITLE_FILTER, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_ITEM)
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_FILTER_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_PASSING)
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('TEST')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_TEST);    
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TEST');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_NONDEST_TITLE_FILTER, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_ITEM)
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_FILTER_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_PASSING)
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('TEST')
+          .appendField(Blockly.Msg.LANG_LISTS_FILTER_INPUT_TEST);     
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    }     
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    }    
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }    
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  getVars: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  blocksInScope: function() {
+    var toBlock = this.getInputTargetBlock('TO');
+    if (toBlock) {
+      return [toBlock];
+    } else {
+      return [];
+    }
+  },
+  declaredNames: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  renameVar: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
+      this.setFieldValue(newName, 'VAR');
+    }
+  },
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_FILTER_INPUT_COLLAPSED_TEXT }]
+};
+
+
+Blockly.Blocks['lists_reduce'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_REDUCE_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_REDUCE_TITLE_REDUCE)
+        .appendField(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_INLIST)
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendValueInput('INITANSWER')
+        .appendField(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_INITIAL_ANSWER)
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_COMBINE)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_VAR,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR1')
+        .appendField(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_AND)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_REDUCE_INPUT_ANSWER,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR2') 
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendIndentedValueInput('COMBINE');
+    this.setOutput(true, null);
+    this.(Blockly.Msg.LANG_LISTS_REDUCE_TOOLTIP);
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  getVars: function() {
+    var names = []
+    names.push(this.getFieldValue('VAR1'));
+    names.push(this.getFieldValue('VAR2'));
+    return names;
+  },
+  blocksInScope: function() {
+    var combineBlock = this.getInputTargetBlock('COMBINE');
+    if (combineBlock) {
+      return [combineBlock];
+    } else {
+      return [];
+    }
+  },
+  declaredNames: function() {
+    return this.getVars();
+  },
+  renameVar: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR1'))) {
+      this.setFieldValue(newName, 'VAR1');
+    }
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR2'))) {
+      this.setFieldValue(newName, 'VAR2');
+    }
+  },
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_REDUCE_TITLE_REDUCE }]
+};
+
+Blockly.Blocks['lists_reverse'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_SORT_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_REVERSE_DEST_TITLE_REVERSE, 'TITLE')
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setMutator(new Blockly.Mutator([]));
+    this.(Blockly.Msg.LANG_LISTS_REVERSE_TOOLTIP);
+    this.changeList = true;
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_REVERSE_DEST_TITLE_REVERSE, 'TITLE')
+      this.setTooltip(Blockly.Msg.LANG_LISTS_REVERSE_TOOLTIP);
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      this.setOutput(true, Blockly.Language.YailTypeToBlocklyType("list",Blockly.Language.OUTPUT));
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_REVERSE_NONDEST_TITLE_REVERSE, 'TITLE')
+      this.setTooltip(Blockly.Msg.LANG_LISTS_REVERSE_TOOLTIP);
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    }     
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    }    
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }    
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_REVERSE_TYPEBLOCK }]
+};
+
+Blockly.Blocks['lists_sort'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_SORT_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_DEST_TITLE_SORT, 'TITLE')
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setMutator(new Blockly.Mutator([]));
+    this.setTooltip(Blockly.Msg.LANG_LISTS_SORT_TOOLTIP);
+    this.changeList = true;
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_DEST_TITLE_SORT, 'TITLE')
+      this.setTooltip(Blockly.Msg.LANG_LISTS_SORT_TOOLTIP);
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      
+      this.setOutput(true, Blockly.Language.YailTypeToBlocklyType("list",Blockly.Language.OUTPUT));
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_NONDEST_TITLE_SORT, 'TITLE')
+      this.setTooltip(Blockly.Msg.LANG_LISTS_SORT_TOOLTIP);
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    }  
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    }
+    
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }   
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_SORT_TYPEBLOCK }]
+};
+
+Blockly.Blocks['lists_sort_comparator'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_DEST_TITLE_SORT, 'TITLE')
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR1,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR1')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_AND)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR2,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR2')  
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendIndentedValueInput('COMPARE');
+    this.setMutator(new Blockly.Mutator([]));
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_TOOLTIP);
+    this.changeList = true;
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('COMPARE');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_DEST_TITLE_SORT,'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR1,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR1')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_AND)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR2,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR2')  
+        .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('COMPARE');      
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('COMPARE');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_NONDEST_TITLE_SORT,'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR1,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR1')
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_AND)
+        .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR2,
+                                                       true, // name is editable
+                                                       Blockly.FieldFlydown.DISPLAY_BELOW),
+                     'VAR2')  
+        .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('COMPARE');
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    } 
+    
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    }
+    
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }    
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  getVars: function() {
+    var names = []
+      names.push(this.getFieldValue('VAR1'));
+    names.push(this.getFieldValue('VAR2'));
+    return names;
+  },
+  blocksInScope: function() {
+    var compareBlock = this.getInputTargetBlock('COMPARE');
+    if (compareBlock) {
+      return [compareBlock];
+    } else {
+      return [];
+    }
+  },
+  declaredNames: function() {
+    return this.getVars();
+  },
+  renameVar: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR1'))) {
+      this.setFieldValue(newName, 'VAR1');
+    }
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR2'))) {
+      this.setFieldValue(newName, 'VAR2');
+    }
+  },
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COLLAPSED_TEXT }]
+};
+
+
+
+
+Blockly.Blocks['lists_sort_key'] = {
+  // For each loop.
+  category : 'Lists',
+  helpUrl : Blockly.Msg.LANG_LISTS_SORT_KEY_HELPURL,
+  init : function() {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+        .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_DEST_TITLE_SORT, 'TITLE')
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('DESCRIPTION')
+      .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_KEY)     
+      .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_VAR,
+                                                     true, // name is editable
+                                                     Blockly.FieldFlydown.DISPLAY_BELOW),
+                   'VAR')
+      .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendIndentedValueInput('KEY');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setMutator(new Blockly.Mutator([]));
+    this.setTooltip( Blockly.Msg.LANG_LISTS_SORT_KEY_TOOLTIP);
+    this.changeList = true;
+  },
+  // onchange: Blockly.WarningHandler.checkErrors,
+  updateBlock_: function() {
+    if (this.changeList) {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('KEY');
+      this.outputConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_DEST_TITLE_SORT, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_KEY)     
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('KEY');    
+      this.setPreviousStatement(true);
+      this.setNextStatement(true);
+    } else {
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('KEY');
+      this.previousConnection = null;
+      this.nextConnection = null;
+      
+      this.appendValueInput('LIST')
+          .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_NONDEST_TITLE_SORT, 'TITLE')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendDummyInput('DESCRIPTION')
+          .appendField(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_KEY)     
+          .appendField(new Blockly.FieldParameterFlydown(Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_VAR,
+                                                         true, // name is editable
+                                                         Blockly.FieldFlydown.DISPLAY_BELOW),
+                       'VAR')
+          .setAlign(Blockly.ALIGN_RIGHT);
+      this.appendIndentedValueInput('KEY'); 
+      this.setOutput(true, null);
+    } 
+  },
+  mutationToDom: function() {
+    var container = document.createElement('mutation');
+    if (! this.changeList) {
+      container.setAttribute('destructive', this.changeList);
+    }  
+    return container;
+  },
+  domToMutation: function(xmlElement) {
+    if(!xmlElement.getAttribute('destructive')){
+      this.changeList = true;
+    } else {
+      this.changeList = (xmlElement.getAttribute('destructive') == "true");
+    } 
+    this.updateBlock_();
+  },
+  decompose: function(workspace) {
+    var containerBlock = new Blockly.Block(workspace, 'lists_mutatorcontainer');
+    containerBlock.initSvg();
+    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var group = changeListButton.group;
+    if (this.changeList) {
+      group.setSelected(changeListButton);
+    } else {
+      group.setSelected(makeNewListButton);
+    }
+    return containerBlock;
+  },
+  compose: function(containerBlock) {
+    this.changeList = containerBlock.getFieldValue('CHANGE_LIST') == 'TRUE' ? true : false;   
+    this.updateBlock_();  
+  },
+  saveConnections: Blockly.saveConnections,
+  getVars: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  blocksInScope: function() {
+    var toBlock = this.getInputTargetBlock('TO');
+    if (toBlock) {
+      return [toBlock];
+    } else {
+      return [];
+    }
+  },
+  declaredNames: function() {
+    return [this.getFieldValue('VAR')];
+  },
+  renameVar: function(oldName, newName) {
+    if (Blockly.Names.equals(oldName, this.getFieldValue('VAR'))) {
+      this.setFieldValue(newName, 'VAR');
+    }
+  },
+  typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_COLLAPSED_TEXT }]
+};

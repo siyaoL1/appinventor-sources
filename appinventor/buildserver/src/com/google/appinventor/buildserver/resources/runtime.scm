@@ -766,6 +766,16 @@
     ((_ lambda-arg-name body-form list)
      (yail-for-each (lambda (lambda-arg-name) body-form) list))))
 
+(define-syntax filterovereach
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-filter-over-each (lambda (lambda-arg-name) body-form) list))))
+     
+(define-syntax mapovereach
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-map-over-each (lambda (lambda-arg-name) body-form) list))))
+
 
 (define-syntax forrange
   (syntax-rules ()
@@ -1989,6 +1999,20 @@ list, use the make-yail-list constructor with no arguments.
   (yail-list-get-item yail-list
               (random-integer 1  (yail-list-length yail-list))))
 
+(define (yail-list-pick-first yail-list)
+   (if (yail-list-empty? yail-list)
+       (signal-runtime-error
+       (format #f "Pick first item: Attempt to pick first element from an empty list")
+        "Invalid list operation"))
+   (yail-list-get-item yail-list 1))
+           
+ (define (yail-list-pick-last yail-list)
+   (if (yail-list-empty? yail-list)
+       (signal-runtime-error
+        (format #f "Pick last item: Attempt to pick last element from an empty list")
+        "Invalid list operation"))
+   (yail-list-get-item yail-list (yail-list-length yail-list)))
+
 
 ;; Implements Blocks foreach, which takes a Yail-list as argument
 ;; This is called by Yail foreach, defined in macros.scm
@@ -2001,9 +2025,49 @@ list, use the make-yail-list constructor with no arguments.
                  "The second argument to foreach is not a list.  The second argument is: ~A"
                  (get-display-representation yail-list))
          "Bad list argument to foreach")
-        (begin
-          (for-each proc (yail-list-contents verified-list))
+       (begin
+         (for-each proc (yail-list-contents verified-list))
           *the-null-value*))))
+          
+(define (yail-filter-over-each proc yail-list)
+  (define (filter pred lst)
+    (cond ((null? lst) '())
+          ((pred (car lst)) (cons (car lst) (filter pred (cdr lst))))
+          (else (filter pred (cdr lst)))))
+
+  (let ((verified-list (coerce-to-yail-list yail-list)))
+    (if (eq? verified-list *non-coercible-value*)
+        (signal-runtime-error
+         (format #f
+                 "The second argument to filterOverEach is not a list.  The second argument is: ~A"
+                 (get-display-representation yail-list))
+         "Bad list argument to filterOverEach")
+        (begin
+         (set-cdr! verified-list (filter proc (yail-list-contents verified-list)))
+          *the-null-value*))))
+
+(define (yail-map-over-each proc yail-list)
+  (let ((verified-list (coerce-to-yail-list yail-list)))
+    (if (eq? verified-list *non-coercible-value*)
+        (signal-runtime-error
+         (format #f
+                 "The second argument to mapOverEach is not a list.  The second argument is: ~A"
+                 (get-display-representation yail-list))
+         "Bad list argument to mapOverEach")
+        (begin
+          (set-cdr! verified-list  (map proc (yail-list-contents verified-list)))
+          verified-list))))
+         ;; *the-null-value*))))
+
+(define (yail-list-reverse yl)
+  (cond ((yail-list-empty? yl) (make YailList))
+        ((not (pair? yl)) yl)
+        (else (reverse (yail-list-contents yl)))))
+
+(define (yail-list-reverse2 yl)
+  (cond ((yail-list-empty? yl) (make YailList))
+        ((not (pair? yl)) yl)
+        (else (reverse! (yail-list-contents yl)))))
 
 ;; yail-for-range needs to check that its args are numeric
 ;; because the blocks editor can't guarantee this
