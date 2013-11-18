@@ -776,6 +776,11 @@
     ((_ lambda-arg-name body-form list)
      (yail-map-over-each (lambda (lambda-arg-name) body-form) list))))
 
+(define-syntax reduceovereach
+  (syntax-rules ()
+    ((_ initialAnswer lambda-arg-name lambda-arg-name2 body-form list)
+     (yail-reduce-over-each initialAnswer (lambda (lambda-arg-name lambda-arg-name2) body-form) list))))
+
 
 (define-syntax forrange
   (syntax-rules ()
@@ -816,6 +821,7 @@
 
 (define-alias JavaCollection <java.util.Collection>)
 (define-alias JavaIterator <java.util.Iterator>)
+(define-alias JavaArrays <java.util.Arrays>)
 
 ;;; This is what CodeBlocks sends to Yail to represent the value of an uninitialized variable
 ;;; Perhaps we should arrange things so that codeblocks never sends this.
@@ -2043,8 +2049,10 @@ list, use the make-yail-list constructor with no arguments.
                  (get-display-representation yail-list))
          "Bad list argument to filterOverEach")
         (begin
-         (set-cdr! verified-list (filter proc (yail-list-contents verified-list)))
-          *the-null-value*))))
+        	(YailList:makeList (filter proc (yail-list-contents verified-list)))))))
+         ;;(set-cdr! verified-list (filter proc (yail-list-contents verified-list)))
+         	;;verified-list))))
+          ;;*the-null-value*))))
 
 (define (yail-map-over-each proc yail-list)
   (let ((verified-list (coerce-to-yail-list yail-list)))
@@ -2055,10 +2063,89 @@ list, use the make-yail-list constructor with no arguments.
                  (get-display-representation yail-list))
          "Bad list argument to mapOverEach")
         (begin
-          (set-cdr! verified-list  (map proc (yail-list-contents verified-list)))
-          verified-list))))
+           (YailList:makeList (map proc (yail-list-contents verified-list)))))))
+          ;;(set-cdr! verified-list  (map proc (yail-list-contents verified-list)))
+          ;;verified-list))))
          ;; *the-null-value*))))
 
+(define (yail-list-sort y1) 
+       (define-alias YailList <com.google.appinventor.components.runtime.util.YailList>)
+       
+   (YailList:makeList (JavaArrays:sort((as YailList y1):toArray))))
+
+
+ #| (define (process-exception ex)
+         (define-alias YailRuntimeError <com.google.appinventor.components.runtime.errors.YailRuntimeError>)
+         ;; The call below is a no-op unless we are in the wireless repl
+         (com.google.appinventor.components.runtime.ReplApplication:reportError ex)
+         (if isrepl
+             (when ((this):toastAllowed)
+                   (begin (send-error (ex:getMessage))
+                          ((android.widget.Toast:makeText (this) (ex:getMessage) 5):show)))
+
+             (com.google.appinventor.components.runtime.util.RuntimeErrorAlert:alert
+              (this)
+              (ex:getMessage)
+              (if (instance? ex YailRuntimeError) ((as YailRuntimeError ex):getErrorType) "Runtime Error")
+              "End Application"))) |#
+
+
+
+
+
+
+
+
+
+
+ #| (define (yail-list-sort y1)
+  
+(define (merge-lists l1 l2)
+      (cond ((null? l1) l2)
+            ((null? l2) l1)
+            ((< (car l1) (car l2)) (cons (car l1) (merge-lists (cdr l1) l2)))
+            (else (cons (car l2) (merge-lists (cdr l2) l1)))))
+
+
+  (define (even-numbers l)
+      (cond ((null? l) '())
+            ((null? (cdr l)) '())
+            (else (cons (car (cdr l)) (even-numbers (cdr (cdr l)))))))
+
+
+  (define (odd-numbers l)
+      (cond ((null? l) '())
+            ((null? (cdr l)) (list (car l)))
+            (else (cons (car l) (odd-numbers (cdr (cdr l)))))))
+
+  (define (mergesort l)
+      (cond ((null? l) l)
+            ((null? (cdr l)) l)
+            (else (merge-lists (mergesort (odd-numbers l))
+                               (mergesort (even-numbers l)))))) 
+                               
+(cond ((yail-list-empty? y1) (make YailList))
+        ((not (pair? y1)) y1)
+        (else (mergesort (yail-list-contents y1))))) |#
+
+
+(define (yail-reduce-over-each ans binop yail-list)
+
+(define (reduce accum func lst)
+    (cond ((null? lst) accum)
+          (else (reduce (func accum (car lst)) func (cdr lst)))))
+         
+ (let ((verified-list (coerce-to-yail-list yail-list)))
+   ;; (let (secondlist (yail-list-copy verified-list))
+    (if (eq? verified-list *non-coercible-value*)
+        (signal-runtime-error
+         (format #f
+                 "The second argument to mapOverEach is not a list.  The second argument is: ~A"
+                 (get-display-representation yail-list))
+         "Bad list argument to mapOverEach")
+        (begin
+           (reduce ans binop (yail-list-contents verified-list))))))
+        
 (define (yail-list-reverse yl)
   (cond ((yail-list-empty? yl) (make YailList))
         ((not (pair? yl)) yl)
