@@ -766,6 +766,11 @@
     ((_ lambda-arg-name lambda-arg-name2 body-form list)
      (yail-list-sort-comparator (lambda (lambda-arg-name lambda-arg-name2) body-form) list))))
 
+(define-syntax sortkey
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-list-sort-key (lambda (lambda-arg-name) body-form) list))))
+
 (define-syntax foreach
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
@@ -2079,35 +2084,121 @@ list, use the make-yail-list constructor with no arguments.
            (set-cdr! verified-list  (map proc (yail-list-contents verified-list)))
            *the-null-value*))))
 
-		
-#| (define (yail-list-sort y1)
-		(let ((array1 :: JavaArrays (YailList:toArray y1)))
-			(begin 
-			   (JavaArrays:sort(array1))
-			   YailList:makeList(array1)))) |#
-                    
-#| (define (is-less-than? x y)
-    (cond ((and (boolean? x) (number? y)) #t)
-          ((and (boolean? x) (string? y)) #t)
-          ((and (boolean? x) (yail-list? y)) #t)
-          ((and (boolean? x) (instance? y com.google.appinventor.components.runtime.Component)) #t)
-          ((and (number? x) (string? y)) #t)
-          ((and (number? x) (yail-list? y)) #t)
-          ((and (number? x) (instance? y com.google.appinventor.components.runtime.Component)) #t)
-          ((and (string? x) (yail-list? y)) #t)
-          ((and (string? x) (instance? y com.google.appinventor.components.runtime.Component)) #t)
-          ((and (yail-list? x) (instance? y com.google.appinventor.components.runtime.Component)) #t)
-          ((and (number? x) (number? y)) (< x y))
-          ((and (string? x) (string? y)) (string<? x y))
-          ((and (boolean? x) (boolean? y)) (string<? (boolean->string x) (boolean->string y)))
-          ((and (instance? x com.google.appinventor.components.runtime.Component) 
-                (instance? y com.google.appinventor.components.runtime.Component))
-                (string<? x y))
-          (else #f))) |#
+(define typeordering '(boolean number text list component))
 
+(define (typeof val)
+	(cond ((boolean? val) 'boolean)
+		  ((number? val) 'number)
+		  ((string? val) 'text)
+		  ((yail-list? val) 'list)
+		  ((instance? val com.google.appinventor.components.runtime.Component) 'component)
+		  (else (signal-runtime-error 
+		  		  (format #f
+                          "typeof called with unexpected value: ~A"
+                          (get-display-representation val))
+         		"Bad arguement to typeof"))))
 
-(define (is-less-than? x y)
-    (cond ((or (and (boolean? x) (number? y))
+(define (indexof element list)
+		(list-index (lambda (x) (eq? x element)) list))
+		  
+#| (define (typeleq? type1 type2)
+	(<= (indexof type1 typeordering) 
+		(indexof type2 typeordering))) |#
+
+(define (type-lt? type1 type2)
+	(< (indexof type1 typeordering) 
+	   (indexof type2 typeordering)))	
+
+(define (is-lt? val1 val2)
+    (let ((type1 (typeof val1)) 
+    	  (type2 (typeof val2)))
+     (or (type-lt? type1 type2) 
+      	 (and (eq? type1 type2) 
+      	       (cond ((eq? type1 'boolean) (boolean-lt? val1 val2))
+      	             ((eq? type1 'number) (< val1 val2))
+      	             ((eq? type1 'text) (string<? val1 val2))
+      	             ((eq? type1 'list) (list-lt? val1 val2))
+      	             ((eq? type1 'component) (component-lt? val1 val2))
+      	             (else (signal-runtime-error 
+		  		            (format #f
+		  		                    "(islt? ~A ~A)"
+                                    (get-display-representation val1) 
+                                    (get-display-representation val2))
+         		            "Shouldn't happen")))))))
+ 
+(define (is-eq? val1 val2)
+    (let ((type1 (typeof val1)) 
+    	  (type2 (typeof val2)))
+      (and (eq? type1 type2) 
+      	   (cond ((eq? type1 'boolean) (boolean-eq? val1 val2))
+      	         ((eq? type1 'number) (= val1 val2))
+      	         ((eq? type1 'text) (string=? val1 val2))
+      	         ((eq? type1 'list) (list-eq? val1 val2))
+      	         ((eq? type1 'component) (component-eq? val1 val2))
+      	         (else (signal-runtime-error 
+		  		            (format #f
+		  		                    "(islt? ~A ~A)"
+                                    (get-display-representation val1) 
+                                    (get-display-representation val2))
+         		            "Shouldn't happen")))))) 
+                     
+(define (is-leq? val1 val2)
+    (let ((type1 (typeof val1)) 
+    	  (type2 (typeof val2)))
+      (or (type-lt? type1 type2) 
+      	  (and (eq? type1 type2) 
+      	       (cond ((eq? type1 'boolean) (boolean-leq? val1 val2))
+      	             ((eq? type1 'number) (<= val1 val2))
+      	             ((eq? type1 'text) (string<=? val1 val2))
+      	             ((eq? type1 'list) (list-leq? val1 val2))
+      	             ((eq? type1 'component) (component-leq? val1 val2))
+      	             (else (signal-runtime-error 
+		  		            (format #f
+		  		                    "(isleq? ~A ~A)"
+                                    (get-display-representation val1) 
+                                    (get-display-representation val2))
+         		            "Shouldn't happen")))))))
+
+(define (boolean-lt? val1 val2)
+	(not (and (not val1) val2)))
+
+(define (boolean-eq? val1 val2)
+	(or (and val1 val2)
+		(and (not val1) (not val2)))) 
+    
+(define (boolean-leq? val1 val2)
+	(not (and val1 (not val2))))
+
+(define (list-lt? val1 val2)
+  (cond ((and (null? val1) (null? val2)) #t)
+        ((null? val1) #t)
+        ((null? val2) #f)
+        ((is-lt? val1 val2) #t)
+        ((is-eq? val1 val2) (list-lt? (cdr val1) (cdr val2)))
+        (else #f))) 
+
+(define (list-eq? val1 val2)
+  (cond ((and (null? val1) (null? val2)) #t)
+        ((is-eq? val1 val2) (list-eq? (cdr val1) (cdr val2)))
+        (else #f))) 
+
+(define (list-leq? val1 val2)
+  (cond ((and (null? val1) (null? val2)) #t)
+        ((null? val1) #t)
+        ((null? val2) #f)
+        ((is-eq? val1 val2) (list-leq? (cdr val1) (cdr val2)))
+        ((is-lt? val1 val2) #t)
+        (else #f))) 
+		  
+(define (component-leq? val1 val2)
+		#t)
+		;;convert to component name, use string<= on component name
+        ;;is-lt, is-eq
+
+;;(*:getSimpleName (*:getClass component))
+
+#| (cond     
+    ((or (and (boolean? x) (number? y))
               (and (boolean? x) (string? y))
               (and (boolean? x) (yail-list? y)) 
               (and (boolean? x) (instance? y com.google.appinventor.components.runtime.Component))
@@ -2123,14 +2214,14 @@ list, use the make-yail-list constructor with no arguments.
           ((and (instance? x com.google.appinventor.components.runtime.Component)
                 (instance? y com.google.appinventor.components.runtime.Component))
                 (string<? x y))
-          (else #f))) 
-
+          (else #f))) |#
+ 
 (define (yail-list-sort y1)
 
 (define (merge lst1 lst2)
 		(cond ((null? lst1) lst2)
 			  ((null? lst2) lst1)
-			  ((is-less-than? (car lst1) (car lst2)) (cons (car lst1) (merge (cdr lst1) lst2)))
+			  ((is-leq? (car lst1) (car lst2)) (cons (car lst1) (merge (cdr lst1) lst2)))
 			  (else (cons (car lst2) (merge lst1 (cdr lst2)))))) 
 
 (define (mergesort lst)
@@ -2138,15 +2229,23 @@ list, use the make-yail-list constructor with no arguments.
 			  ((null? (cdr lst)) lst)
 			  (else (merge (mergesort (take lst (quotient (length lst) 2)))
 			  			   (mergesort (drop lst (quotient (length lst) 2))))))) 
+
+ ;;(indexof 'boolean typeordering))
+
                                                               
 (cond ((yail-list-empty? y1) (make YailList))
         ((not (pair? y1)) y1)
         (else (mergesort (yail-list-contents y1))))) 
 
+#| (cond ((yail-list-empty? y1) (make YailList))
+        ((not (pair? y1)) y1)
+        (else (sort (yail-list-contents y1) is-less-than-list?)))) |#
+
+(require 'srfi-95)
 			   	        
 (define (yail-list-sort-comparator islessthan? y1)
             
-(define (merge lessthan? lst1 lst2)
+#| (define (merge lessthan? lst1 lst2)
 		(cond ((null? lst1) lst2)
 			  ((null? lst2) lst1)
 			  ((lessthan? (car lst1) (car lst2)) (cons (car lst1) (merge lessthan? (cdr lst1) lst2)))
@@ -2156,11 +2255,17 @@ list, use the make-yail-list constructor with no arguments.
 		(cond ((null? lst) lst)
 			  ((null? (cdr lst)) lst)
 			  (else (merge isless? (mergesort isless? (take lst (quotient (length lst) 2)))
-			  				       (mergesort isless? (drop lst (quotient (length lst) 2))))))) 
+			  				       (mergesort isless? (drop lst (quotient (length lst) 2))))))) |# 
                                
 (cond ((yail-list-empty? y1) (make YailList))
         ((not (pair? y1)) y1)
-        (else (mergesort islessthan? (yail-list-contents y1))))) 
+        (else (sort (yail-list-contents y1) islessthan?)))) 
+        
+(define (yail-list-sort-key key y1)
+                                           
+(cond ((yail-list-empty? y1) (make YailList))
+        ((not (pair? y1)) y1)
+        (else (sort (yail-list-contents y1) is-less-than? key)))) 
 
 (define (yail-reduce-over-each ans binop yail-list)
 

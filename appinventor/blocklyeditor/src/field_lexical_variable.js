@@ -271,25 +271,13 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sortComparatorNonDestructive")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-        	  //params = parent.declaredNames(); // [lyn, 10/13/13] Names from block, not localNames_ instance var
-              //for (i = 0; i < params.length; i++) {
-              //  rememberName(params[i], localNames, Blockly.localNamePrefix);
-              //}
-        	  
-        	  
-        	  var loopName = parent.getTitleValue('VAR');
+           var loopName = parent.getTitleValue('VAR');
            var loopName2 = parent.getTitleValue('VAR2');
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
            rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_reduceOverEach")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-        	  //params = parent.declaredNames(); // [lyn, 10/13/13] Names from block, not localNames_ instance var
-              //for (i = 0; i < params.length; i++) {
-              //  rememberName(params[i], localNames, Blockly.localNamePrefix);
-              //}
-        	  
-        	  
-        	  var loopName = parent.getTitleValue('VAR');
+           var loopName = parent.getTitleValue('VAR');
            var loopName2 = parent.getTitleValue('VAR2');
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
            rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
@@ -297,14 +285,6 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
            var loopName = parent.getTitleValue('VAR');
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
-          /*} else if ( (parent.type === "lists_sortOverEach")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
-          } else if ( (parent.type === "lists_reduceOverEach")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix);*/
           } else if ( (parent.type === "controls_forRange")
                      && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
               var rangeName = parent.getFieldValue('VAR');

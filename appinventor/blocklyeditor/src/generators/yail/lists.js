@@ -399,25 +399,6 @@ Blockly.Yail.lists_sortComparatorNonDestructive = function() {
 };
 
 
-/*var loopIndexName = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR');
-var loopIndexName2 = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR2');
-
-var listCode = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || emptyListCode;
-var nullCode = Blockly.Yail.valueToCode(this, 'NULL', Blockly.Yail.ORDER_NONE);
-var bodyCode = Blockly.Yail.valueToCode(this, 'DO', Blockly.Yail.ORDER_NONE) ||  Blockly.Yail.YAIL_FALSE;
-var code = Blockly.Yail.YAIL_REDUCEOVEREACH 
-+ nullCode + Blockly.Yail.YAIL_SPACER
-+ loopIndexName + Blockly.Yail.YAIL_SPACER 
-+ loopIndexName2 + Blockly.Yail.YAIL_SPACER
-//+ nullCode + Blockly.Yail.YAIL_SPACER
-+ Blockly.Yail.YAIL_BEGIN + bodyCode + Blockly.Yail.YAIL_CLOSE_COMBINATION + Blockly.Yail.YAIL_SPACER 
-//+ nullCode + Blockly.Yail.YAIL_SPACER
-+ listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
- return [ code, Blockly.Yail.ORDER_ATOMIC ];*/
-
-
-
-
 Blockly.Yail.lists_sortKeyNonDestructive = function() {
 	  // For each loop.
 var emptyListCode = Blockly.Yail.YAIL_CALL_YAIL_PRIMITIVE + "make-yail-list" + Blockly.Yail.YAIL_SPACER;
@@ -432,9 +413,12 @@ var loopIndexName = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR');
 //var loopIndexName2 = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR2');
 var listCode = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || emptyListCode;
 var bodyCode = Blockly.Yail.valueToCode(this, 'DO', Blockly.Yail.ORDER_NONE) ||  Blockly.Yail.YAIL_FALSE;
-return Blockly.Yail.YAIL_SORTOVEREACH + loopIndexName + Blockly.Yail.YAIL_SPACER
-+ Blockly.Yail.YAIL_BEGIN + bodyCode + Blockly.Yail.YAIL_CLOSE_COMBINATION + Blockly.Yail.YAIL_SPACER 
+var code = Blockly.Yail.YAIL_SORTKEY 
++ loopIndexName + Blockly.Yail.YAIL_SPACER
++ bodyCode + Blockly.Yail.YAIL_SPACER 
+//+ loopIndexName + Blockly.Yail.YAIL_SPACER
 + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+return [ code, Blockly.Yail.ORDER_ATOMIC ];
 };
 
 
@@ -463,12 +447,6 @@ Blockly.Yail.lists_reduceOverEach = function() {
 	+ listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
 	 return [ code, Blockly.Yail.ORDER_ATOMIC ];
 };
-
-//var startCode = Blockly.Yail.valueToCode(this, 'START', Blockly.Yail.ORDER_NONE) || 0;
-//var endCode = Blockly.Yail.valueToCode(this, 'END', Blockly.Yail.ORDER_NONE) || 0;
-//var stepCode = Blockly.Yail.valueToCode(this, 'STEP', Blockly.Yail.ORDER_NONE) || 0;
-//var bodyCode = Blockly.Yail.statementToCode(this, 'DO', Blockly.Yail.ORDER_NONE) || Blockly.Yail.YAIL_FALSE;
-
 
 Blockly.Yail.lists_sortNonDestructive = function() {
 	  // Make a copy of list.

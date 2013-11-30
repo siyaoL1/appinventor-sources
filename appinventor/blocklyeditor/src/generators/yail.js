@@ -32,7 +32,7 @@ Blockly.Yail.RESERVED_WORDS_ = '';
 Blockly.Yail.ORDER_ATOMIC = 0;         // 0 "" ...
 Blockly.Yail.ORDER_NONE = 99;          // (...)
 
-
+Blockly.Yail.YAIL_SORTKEY = "(sortkey ";
 Blockly.Yail.YAIL_SORTOVEREACH = "(sortovereach ";
 Blockly.Yail.YAIL_FILTEROVEREACH = "(filterovereach ";
 Blockly.Yail.YAIL_MAPOVEREACH = "(mapovereach ";
