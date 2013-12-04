@@ -761,35 +761,10 @@
         (*:addParent (KawaEnvironment:getCurrent) *test-environment*)
         (set! *test-global-var-environment* (gnu.mapping.Environment:make 'test-global-var-env)))))
 
-(define-syntax sortovereach
-  (syntax-rules ()
-    ((_ lambda-arg-name lambda-arg-name2 body-form list)
-     (yail-list-sort-comparator (lambda (lambda-arg-name lambda-arg-name2) body-form) list))))
-
-(define-syntax sortkey
-  (syntax-rules ()
-    ((_ lambda-arg-name body-form list)
-     (yail-list-sort-key (lambda (lambda-arg-name) body-form) list))))
-
 (define-syntax foreach
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
      (yail-for-each (lambda (lambda-arg-name) body-form) list))))
-
-(define-syntax filterovereach
-  (syntax-rules ()
-    ((_ lambda-arg-name body-form list)
-     (yail-filter (lambda (lambda-arg-name) body-form) list))))
-     
-(define-syntax mapovereach
-  (syntax-rules ()
-    ((_ lambda-arg-name body-form list)
-     (yail-map (lambda (lambda-arg-name) body-form) list))))
-     
-(define-syntax reduceovereach
-  (syntax-rules ()
-    ((_ initialAnswer lambda-arg-name lambda-arg-name2 body-form list)
-     (yail-reduce initialAnswer (lambda (lambda-arg-name lambda-arg-name2) body-form) list)))) 
 
 (define-syntax forrange
   (syntax-rules ()
@@ -806,6 +781,31 @@
          (loop))
        *the-null-value*)))))
 
+(define-syntax mapovereach
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-map (lambda (lambda-arg-name) body-form) list))))
+
+(define-syntax filterovereach
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-filter (lambda (lambda-arg-name) body-form) list))))
+          
+(define-syntax reduceovereach
+  (syntax-rules ()
+    ((_ initialAnswer lambda-arg-name lambda-arg-name2 body-form list)
+     (yail-reduce initialAnswer (lambda (lambda-arg-name lambda-arg-name2) body-form) list)))) 
+
+(define-syntax sortcomparator
+  (syntax-rules ()
+    ((_ lambda-arg-name lambda-arg-name2 body-form list)
+     (yail-list-sort-comparator (lambda (lambda-arg-name lambda-arg-name2) body-form) list))))
+
+(define-syntax sortkey
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-list-sort-key (lambda (lambda-arg-name) body-form) list))))
+     
 ;;; RUNTIME library
 
 ;; TODO(markf): explicit 'provide' doesn't seem to work for us, so we put the runtime in a known
@@ -2239,13 +2239,11 @@ list, use the make-yail-list constructor with no arguments.
 			  ((null? lst2) lst1)
 			  ((lessthan? (key (car lst1)) (key (car lst2))) (cons (car lst1) (merge-key lessthan? key (cdr lst1) lst2)))
 			  (else (cons (car lst2) (merge-key lessthan? key lst1 (cdr lst2)))))) 
-
 	(define (mergesort-key lessthan? key lst)
 		(cond ((null? lst) lst)
 			  ((null? (cdr lst)) lst)
 			  (else (merge-key lessthan? key (mergesort-key lessthan? key (take lst (quotient (length lst) 2)))
 			  				             (mergesort-key lessthan? key (drop lst (quotient (length lst) 2))))))) 
-
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
           (else (mergesort-key is-leq? key (yail-list-contents y1))))) 

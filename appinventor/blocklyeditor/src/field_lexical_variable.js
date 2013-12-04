@@ -267,15 +267,15 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_reduce")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
+           var loopName1 = parent.getTitleValue('VAR1');
            var loopName2 = parent.getTitleValue('VAR2');
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
+           rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
            rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sort_comparator")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
+           var loopName1 = parent.getTitleValue('VAR1');
            var loopName2 = parent.getTitleValue('VAR2');
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
+           rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
            rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sort_key")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
