@@ -32,12 +32,11 @@ Blockly.Yail.RESERVED_WORDS_ = '';
 Blockly.Yail.ORDER_ATOMIC = 0;         // 0 "" ...
 Blockly.Yail.ORDER_NONE = 99;          // (...)
 
-Blockly.Yail.YAIL_SORTKEY = "(sortkey ";
-Blockly.Yail.YAIL_SORTOVEREACH = "(sortovereach ";
-Blockly.Yail.YAIL_FILTEROVEREACH = "(filterovereach ";
-Blockly.Yail.YAIL_MAPOVEREACH = "(mapovereach ";
-Blockly.Yail.YAIL_MAPOVEREACHD = "(mapovereachd ";
-Blockly.Yail.YAIL_REDUCEOVEREACH = "(reduceovereach ";
+Blockly.Yail.YAIL_SORT_KEY = "(sortkey ";
+Blockly.Yail.YAIL_SORT_COMPARATOR = "(sortovereach ";
+Blockly.Yail.YAIL_FILTER = "(filterovereach ";
+Blockly.Yail.YAIL_MAP = "(mapovereach ";
+Blockly.Yail.YAIL_REDUCE = "(reduceovereach ";
 Blockly.Yail.YAIL_ADD_COMPONENT = "(add-component ";
 Blockly.Yail.YAIL_ADD_TO_LIST = "(add-to-list ";
 Blockly.Yail.YAIL_BEGIN = "(begin ";
