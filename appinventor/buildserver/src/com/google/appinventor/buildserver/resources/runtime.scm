@@ -793,13 +793,13 @@
           
 (define-syntax reduceovereach
   (syntax-rules ()
-    ((_ initialAnswer lambda-arg1-name lambda-arg2-name body-form list)
-     (yail-reduce initialAnswer (lambda (lambda-arg1-name lambda-arg2-name) body-form) list)))) 
+    ((_ initialAnswer lambda-arg-name lambda-arg-name2 body-form list)
+     (yail-reduce initialAnswer (lambda (lambda-arg-name lambda-arg-name2) body-form) list)))) 
 
 (define-syntax sortcomparator
   (syntax-rules ()
-    ((_ lambda-arg1-name lambda-arg2-name body-form list)
-     (yail-list-sort-comparator (lambda (lambda-arg1-name lambda-arg2-name) body-form) list))))
+    ((_ lambda-arg-name lambda-arg-name2 body-form list)
+     (yail-list-sort-comparator (lambda (lambda-arg-name lambda-arg-name2) body-form) list))))
 
 (define-syntax sortkey
   (syntax-rules ()
@@ -2014,6 +2014,21 @@ list, use the make-yail-list constructor with no arguments.
        "Invalid list operation"))
   (yail-list-get-item yail-list
               (random-integer 1  (yail-list-length yail-list))))
+
+(define (yail-list-pick-first yail-list)
+   (if (yail-list-empty? yail-list)
+       (signal-runtime-error
+       (format #f "Pick first item: Attempt to pick first element from an empty list")
+        "Invalid list operation"))
+   (yail-list-get-item yail-list 1))
+           
+ (define (yail-list-pick-last yail-list)
+   (if (yail-list-empty? yail-list)
+       (signal-runtime-error
+        (format #f "Pick last item: Attempt to pick last element from an empty list")
+        "Invalid list operation"))
+   (yail-list-get-item yail-list (yail-list-length yail-list)))
+
 
 ;; Implements Blocks foreach, which takes a Yail-list as argument
 ;; This is called by Yail foreach, defined in macros.scm
