@@ -254,29 +254,29 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
               var loopName = parent.getFieldValue('VAR');
               rememberName(loopName, loopNames, Blockly.loopParameterPrefix); 
           } else if ( (parent.type === "controls_forRange")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var rangeName = parent.getTitleValue('VAR');
-           rememberName(rangeName, rangeNames, Blockly.loopRangeParameterPrefix);
+                     && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
+              var rangeName = parent.getTitleValue('VAR');
+              rememberName(rangeName, rangeNames, Blockly.loopRangeParameterPrefix);
           } else if ( (parent.type === "lists_map")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix); 
+                     && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
+              var loopName = parent.getTitleValue('VAR');
+              rememberName(loopName, loopNames, Blockly.loopParameterPrefix); 
           } else if ( (parent.type === "lists_filter")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName = parent.getTitleValue('VAR');
-           rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
+                     && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
+              var loopName = parent.getTitleValue('VAR');
+              rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_reduce")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName1 = parent.getTitleValue('VAR1');
-           var loopName2 = parent.getTitleValue('VAR2');
-           rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
-           rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
+              var loopName1 = parent.getTitleValue('VAR1');
+              var loopName2 = parent.getTitleValue('VAR2');
+              rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
+              rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sort_comparator")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
-           var loopName1 = parent.getTitleValue('VAR1');
-           var loopName2 = parent.getTitleValue('VAR2');
-           rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
-           rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
+              var loopName1 = parent.getTitleValue('VAR1');
+              var loopName2 = parent.getTitleValue('VAR2');
+              rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
+              rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sort_key")
                   && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
            var loopName = parent.getTitleValue('VAR');
