@@ -2005,7 +2005,6 @@ list, use the make-yail-list constructor with no arguments.
   (let ((result (member object (yail-list-contents yail-list) yail-equal?)))
     (if result #t #f)))
 
-
 ;; Returns an element chosen at random from the list
 (define (yail-list-pick-random yail-list)
   (if (yail-list-empty? yail-list)
@@ -2067,6 +2066,8 @@ list, use the make-yail-list constructor with no arguments.
  	(cond ((yail-list-empty? yl) (make YailList))
           ((not (pair? yl)) yl)
           (else (reverse (yail-list-contents yl)))))
+
+;;Implements a generic sorting procedure that works on any list of types.
          
 (define typeordering '(boolean number text list component))
 
@@ -2139,6 +2140,7 @@ list, use the make-yail-list constructor with no arguments.
                                     (get-display-representation val2))
          		            "Shouldn't happen")))))))
 
+;;false is less than true
 (define (boolean-lt? val1 val2)
 	(and (not val1) val2))
 
@@ -2174,6 +2176,8 @@ list, use the make-yail-list constructor with no arguments.
               (else #f)))
 	(helper-list-leq? (yail-list-contents y1) (yail-list-contents y2)))
 
+;;Component are first compared using their class names. If they are instances of the same class,
+;;then they are compared using their hashcodes.
 (define (component-lt? comp1 comp2)
 	(or (string<? (*:getSimpleName (*:getClass comp1))
                   (*:getSimpleName (*:getClass comp2)))
