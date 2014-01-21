@@ -786,6 +786,11 @@
     ((_ lambda-arg-name body-form list)
      (yail-map (lambda (lambda-arg-name) body-form) list))))
 
+(define-syntax mapovereachd
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-map-dest (lambda (lambda-arg-name) body-form) list))))
+
 (define-syntax filterovereach
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
@@ -2038,6 +2043,18 @@ list, use the make-yail-list constructor with no arguments.
                  (get-display-representation yail-list))
          "Bad list argument to map")
          (kawa-list->yail-list (map proc (yail-list-contents verified-list))))))
+
+(define (yail-map-dest proc yail-list)
+  (let ((verified-list (coerce-to-yail-list yail-list)))
+    (if (eq? verified-list *non-coercible-value*)
+        (signal-runtime-error
+         (format #f
+                 "The second argument to map is not a list.  The second argument is: ~A"
+                 (get-display-representation yail-list))
+         "Bad list argument to map")
+        (begin
+          (set-cdr! verified-list  (map proc (yail-list-contents verified-list)))
+           *the-null-value*))))
 
 (define (yail-filter proc yail-list)
   (let ((verified-list (coerce-to-yail-list yail-list)))

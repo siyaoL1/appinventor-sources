@@ -71,6 +71,7 @@ Blockly.Yail.YAIL_LEXICAL_VALUE = "(lexical-value ";
 Blockly.Yail.YAIL_SET_LEXICAL_VALUE = "(set-lexical! ";
 Blockly.Yail.YAIL_LINE_FEED = "\n";
 Blockly.Yail.YAIL_MAP = "(mapovereach ";
+Blockly.Yail.YAIL_MAP_DEST = "(mapovereachd ";
 Blockly.Yail.YAIL_NULL = "(get-var *the-null-value*)";
 Blockly.Yail.YAIL_EMPTY_LIST = "'()";
 Blockly.Yail.YAIL_OPEN_BLOCK = "(";

@@ -260,6 +260,10 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
           } else if ( (parent.type === "lists_map")
                      && (parent.getInputTargetBlock('TO') == child)) {// Only DO is in scope, not other inputs!
               var loopName = parent.getTitleValue('VAR');
+              rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
+          } else if ( (parent.type === "lists_map_destructive")
+                     && (parent.getInputTargetBlock('TO') == child)) {// Only DO is in scope, not other inputs!
+              var loopName = parent.getTitleValue('VAR');
               rememberName(loopName, loopNames, Blockly.loopParameterPrefix); 
           } else if ( (parent.type === "lists_filter")
                      && (parent.getInputTargetBlock('TEST') == child)) {// Only DO is in scope, not other inputs!
