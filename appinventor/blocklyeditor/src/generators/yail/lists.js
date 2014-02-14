@@ -300,6 +300,11 @@ Blockly.Yail['lists_from_csv_table'] = function() {
    code = code + Blockly.Yail.YAIL_SPACER + Blockly.Yail.YAIL_DOUBLE_QUOTE + "lookup in pairs" + Blockly.Yail.YAIL_DOUBLE_QUOTE + Blockly.Yail.YAIL_CLOSE_COMBINATION;
    return [ code, Blockly.Yail.ORDER_ATOMIC ];
  };
+
+Blockly.Yail.lists_mutatorcontainer = function() {
+	var mode = this.getTitleValue('TOGGLE_DO_RETURN');
+	return mode;
+} 
  
 Blockly.Yail.lists_map = function() {
 	// For each loop.
@@ -312,9 +317,17 @@ Blockly.Yail.lists_map = function() {
 	var loopIndexName = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR');
 	var listCode = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || emptyListCode;
 	var bodyCode = Blockly.Yail.valueToCode(this, 'TO', Blockly.Yail.ORDER_NONE) ||  Blockly.Yail.YAIL_FALSE;
-	var code = Blockly.Yail.YAIL_MAP + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
-		         + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
-	return [ code, Blockly.Yail.ORDER_ATOMIC ];
+	
+	if (this.getTitleValue('TITLE') == Blockly.LANG_LISTS_MAP_TITLE_MAP) {
+		var code = Blockly.Yail.YAIL_MAP + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
+        + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return [ code, Blockly.Yail.ORDER_ATOMIC ];
+	} else {
+		var code = Blockly.Yail.YAIL_MAP_DEST + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
+        + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return code;
+	}
+	
 };
 
 Blockly.Yail.lists_map_destructive = function() {
