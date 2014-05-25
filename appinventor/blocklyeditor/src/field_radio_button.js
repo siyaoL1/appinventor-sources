@@ -26,11 +26,6 @@ goog.provide('Blockly.FieldRadioButton');
 
 goog.require('Blockly.FieldCheckbox');
 
-//Blockly.AIRadioButton = {};
-
-//radioButtonArray = [];
-
-//count = 0;
 
 /**
  * Class for a checkbox field.

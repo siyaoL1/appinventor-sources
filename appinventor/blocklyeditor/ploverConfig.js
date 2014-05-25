@@ -91,6 +91,8 @@
     "./src/nameSet.js",
     "./src/substitution.js",
     "./src/language_switch.js",
+    "./src/field_radio_button.js",
+
 
     // Dialog Utiltiy
     "./src/util.js",

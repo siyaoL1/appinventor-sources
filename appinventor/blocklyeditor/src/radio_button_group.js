@@ -52,4 +52,3 @@ Blockly.RadioButtonGroup.prototype.setSelected = function(button) {
 		this.selectedElement = button;
 	}
 };
-

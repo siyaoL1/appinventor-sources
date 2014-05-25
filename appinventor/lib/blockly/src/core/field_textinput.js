@@ -46,6 +46,7 @@ Blockly.FieldTextInput = function(text, opt_changeHandler) {
   Blockly.FieldTextInput.superClass_.constructor.call(this, text);
 
   this.changeHandler_ = opt_changeHandler;
+  //console.log(this.changeHandler);
 };
 goog.inherits(Blockly.FieldTextInput, Blockly.Field);
 
@@ -82,6 +83,7 @@ Blockly.FieldTextInput.prototype.setText = function(text) {
     return;
   }
   if (this.changeHandler_) {
+	//console.log(this.changeHandler_);
     var validated = this.changeHandler_(text);
     // If the new text is invalid, validation returns null.
     // In this case we still want to display the illegal result.
