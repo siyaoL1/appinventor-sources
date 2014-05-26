@@ -27,6 +27,7 @@ goog.provide('Blockly.FieldRadioButton');
 goog.require('Blockly.FieldCheckbox');
 
 
+
 /**
  * Class for a checkbox field.
  * @param {radio_button_group} The group that the radio button is a part of.
@@ -35,14 +36,15 @@ goog.require('Blockly.FieldCheckbox');
  * @extends {Blockly.Field}
  * @constructor
  */
-Blockly.FieldRadioButton = function(group, opt_changeHandler) {
+Blockly.FieldRadioButton = function(group,opt_changeHandler) {
   Blockly.FieldRadioButton.superClass_.constructor.call(this, 'FALSE', opt_changeHandler);
-  
+ 
   this.group = group;
   group.addToGroup(this);
  
 };
 goog.inherits(Blockly.FieldRadioButton, Blockly.FieldCheckbox);
+
 
 
 /**

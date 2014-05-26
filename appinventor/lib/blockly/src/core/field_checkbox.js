@@ -51,6 +51,7 @@ Blockly.FieldCheckbox = function(state, opt_changeHandler) {
   this.checkElement_.appendChild(textNode);
   // Set the initial state.
   this.setValue(state);
+  console.log(this.state_);
 };
 goog.inherits(Blockly.FieldCheckbox, Blockly.Field);
 

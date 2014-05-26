@@ -31,8 +31,8 @@ Blockly.RadioButtonGroup = function() {
 };
 
 Blockly.RadioButtonGroup.prototype.addToGroup = function(button) {
-	if !(button in this.elements) {
-	this.elements.push(button);
+	if (this.elements.indexOf(button) == -1) {
+		this.elements.push(button);
 	}
 	if (this.elements.length == 1) {
 		button.setValue('TRUE');

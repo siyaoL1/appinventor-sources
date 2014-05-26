@@ -92,6 +92,7 @@
     "./src/substitution.js",
     "./src/language_switch.js",
     "./src/field_radio_button.js",
+    "./src/radio_button_group.js",
 
 
     // Dialog Utiltiy
