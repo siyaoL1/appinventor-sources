@@ -38,10 +38,12 @@ goog.require('Blockly.FieldCheckbox');
  */
 Blockly.FieldRadioButton = function(group,opt_changeHandler) {
   Blockly.FieldRadioButton.superClass_.constructor.call(this, 'FALSE', opt_changeHandler);
- 
   this.group = group;
   group.addToGroup(this);
- 
+  // Change symbol from a checkmark to a black circle
+  var textNode = this.checkElement_.childNodes[0];
+  // Lyn sez: goog.dom.getChildren doesn't work above. Why not?
+  textNode.nodeValue = '\u25cf'; // Unicode black circle character
 };
 goog.inherits(Blockly.FieldRadioButton, Blockly.FieldCheckbox);
 
@@ -52,14 +54,18 @@ goog.inherits(Blockly.FieldRadioButton, Blockly.FieldCheckbox);
  * @param {string} strBool New state.
  */ 
 Blockly.FieldRadioButton.prototype.setValue = function(strBool) {
-	var oldState = this.state_;
-	var newState = (strBool == 'TRUE');
-	
-  if (this.state_ !== newState) {
-    if (newState) {
-    	this.group.setSelected(this);
+  if (! this.group) { // Handle situation where setValue called inside FieldCheckbox constructor
+    Blockly.FieldCheckbox.prototype.setValue.call(this,strBool); // Do what inherited setValue would do.
+  } else {
+	  var oldState = this.getValue();
+	  var newState = (strBool == 'TRUE');
+    if (oldState !== newState) {
+      if (newState) {
+    	  this.group.setSelected(this);  // Note: this calls inherited setValue
+      }
     }
   }
 };
 
   
+

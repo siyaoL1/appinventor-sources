@@ -44,11 +44,11 @@ Blockly.RadioButtonGroup.prototype.getSelected = function() {
 };
 
 Blockly.RadioButtonGroup.prototype.setSelected = function(button) {
-	if ((button in this.elements) && (button != this.selectedElement)) {
+	if ((this.elements.indexOf(button) != -1) && (button != this.selectedElement)) {
 		if (this.selectedElement) {
-			Blockly.FieldCheckbox.setValue(this.selectedElement,'FALSE');
+			Blockly.FieldCheckbox.prototype.setValue.call(this.selectedElement,'FALSE');
 		}
-		Blockly.FieldCheckbox.setValue(button,'TRUE');
+		Blockly.FieldCheckbox.prototype.setValue.call(button,'TRUE');
 		this.selectedElement = button;
 	}
 };
