@@ -421,9 +421,23 @@ Blockly.Yail.lists_sort_comparator = function() {
 	var loopIndexName2 = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR2');
 	var listCode = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || emptyListCode;
 	var bodyCode = Blockly.Yail.valueToCode(this, 'COMPARE', Blockly.Yail.ORDER_NONE) ||  Blockly.Yail.YAIL_FALSE;
-	var code = Blockly.Yail.YAIL_SORT_COMPARATOR + loopIndexName1 + Blockly.Yail.YAIL_SPACER + loopIndexName2 + Blockly.Yail.YAIL_SPACER
-    			+ bodyCode + Blockly.Yail.YAIL_SPACER + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
-	return [ code, Blockly.Yail.ORDER_ATOMIC ];
+		
+	if (this.getTitleValue('TITLE') == Blockly.LANG_LISTS_SORT_COMPARATOR_TITLE_SORT) {
+		var code = Blockly.Yail.YAIL_SORT_COMPARATOR_NONDEST 
+		+ loopIndexName1 + Blockly.Yail.YAIL_SPACER
+		+ loopIndexName2 + Blockly.Yail.YAIL_SPACER
+	    + bodyCode + Blockly.Yail.YAIL_SPACER 
+	    + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return [ code, Blockly.Yail.ORDER_ATOMIC ];
+	} else {
+		var code = Blockly.Yail.YAIL_SORT_COMPARATOR_DEST 
+		+ loopIndexName1 + Blockly.Yail.YAIL_SPACER
+		+ loopIndexName2 + Blockly.Yail.YAIL_SPACER
+	    + bodyCode + Blockly.Yail.YAIL_SPACER 
+	    + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return code;
+	}
+	
 };
 
 Blockly.Yail.lists_sort_key = function() {

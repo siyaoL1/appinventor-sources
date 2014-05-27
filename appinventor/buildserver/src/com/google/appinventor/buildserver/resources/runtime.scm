@@ -806,10 +806,15 @@
     ((_ initialAnswer lambda-arg1-name lambda-arg2-name body-form list)
      (yail-reduce initialAnswer (lambda (lambda-arg1-name lambda-arg2-name) body-form) list)))) 
 
-(define-syntax sortcomparator
+(define-syntax sortcomparator_nondest
   (syntax-rules ()
     ((_ lambda-arg1-name lambda-arg2-name body-form list)
      (yail-list-sort-comparator (lambda (lambda-arg1-name lambda-arg2-name) body-form) list))))
+     
+(define-syntax sortcomparator_dest
+  (syntax-rules ()
+    ((_ lambda-arg1-name lambda-arg2-name body-form list)
+     (yail-list-sort-comparator-dest (lambda (lambda-arg1-name lambda-arg2-name) body-form) list))))
 
 (define-syntax sortkey_nondest
   (syntax-rules ()
@@ -2269,6 +2274,14 @@ list, use the make-yail-list constructor with no arguments.
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
           (else (mergesort lessthan? (yail-list-contents y1))))) 
+ 
+(define (yail-list-sort-comparator-dest lessthan? y1)                                           
+	(cond ((yail-list-empty? y1) (make YailList))
+          ((not (pair? y1)) y1)
+          (else 
+            (begin
+              (set-cdr! y1 (mergesort lessthan? (yail-list-contents y1))) 
+              *the-null-value*))))
  
 (define (merge-key lessthan? key lst1 lst2)
 		(cond ((null? lst1) lst2)
