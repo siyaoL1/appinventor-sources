@@ -811,10 +811,15 @@
     ((_ lambda-arg1-name lambda-arg2-name body-form list)
      (yail-list-sort-comparator (lambda (lambda-arg1-name lambda-arg2-name) body-form) list))))
 
-(define-syntax sortkey
+(define-syntax sortkey_nondest
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
      (yail-list-sort-key (lambda (lambda-arg-name) body-form) list))))
+     
+(define-syntax sortkey_dest
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-list-sort-key-dest (lambda (lambda-arg-name) body-form) list))))
      
 ;;; RUNTIME library
 
@@ -2246,30 +2251,49 @@ list, use the make-yail-list constructor with no arguments.
 		  (else (merge lessthan? (mergesort lessthan? (take lst (quotient (length lst) 2)))
 			  				     (mergesort lessthan? (drop lst (quotient (length lst) 2))))))) 
  
-(define (yail-list-sort y1)
+(define (yail-list-sort-nondest y1)
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
           (else (mergesort is-leq? (yail-list-contents y1))))) 
+
+(define (yail-list-sort-dest y1)
+  (cond ((yail-list-empty? y1) (make YailList))
+          ((not (pair? y1)) y1)
+          (else 
+            (begin
+              (set-cdr! y1 (mergesort is-leq? (yail-list-contents y1))) 
+              *the-null-value*))))
+           
 			   	        
 (define (yail-list-sort-comparator lessthan? y1)                                           
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
           (else (mergesort lessthan? (yail-list-contents y1))))) 
-        
-(define (yail-list-sort-key key y1) 
-	(define (merge-key lessthan? key lst1 lst2)
+ 
+(define (merge-key lessthan? key lst1 lst2)
 		(cond ((null? lst1) lst2)
 			  ((null? lst2) lst1)
 			  ((lessthan? (key (car lst1)) (key (car lst2))) (cons (car lst1) (merge-key lessthan? key (cdr lst1) lst2)))
 			  (else (cons (car lst2) (merge-key lessthan? key lst1 (cdr lst2)))))) 
-	(define (mergesort-key lessthan? key lst)
+
+(define (mergesort-key lessthan? key lst)
 		(cond ((null? lst) lst)
 			  ((null? (cdr lst)) lst)
 			  (else (merge-key lessthan? key (mergesort-key lessthan? key (take lst (quotient (length lst) 2)))
-			  				             (mergesort-key lessthan? key (drop lst (quotient (length lst) 2))))))) 
+			  				             (mergesort-key lessthan? key (drop lst (quotient (length lst) 2)))))))  
+       
+(define (yail-list-sort-key key y1) 
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
-          (else (mergesort-key is-leq? key (yail-list-contents y1))))) 
+          (else (mergesort-key is-leq? key (yail-list-contents y1)))))
+
+(define (yail-list-sort-key-dest key y1)
+  (cond ((yail-list-empty? y1) (make YailList))
+          ((not (pair? y1)) y1)
+          (else 
+            (begin
+              (set-cdr! y1 (mergesort-key is-leq? key (yail-list-contents y1))) 
+              *the-null-value*)))) 
                                           
 ;; yail-for-range needs to check that its args are numeric
 ;; because the blocks editor can't guarantee this
