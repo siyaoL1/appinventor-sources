@@ -781,20 +781,25 @@
          (loop))
        *the-null-value*)))))
 
-(define-syntax mapovereach
+(define-syntax map_nondest
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
      (yail-map (lambda (lambda-arg-name) body-form) list))))
 
-(define-syntax mapovereachd
+(define-syntax map_dest
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
      (yail-map-dest (lambda (lambda-arg-name) body-form) list))))
 
-(define-syntax filterovereach
+(define-syntax filter_nondest
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)
      (yail-filter (lambda (lambda-arg-name) body-form) list))))
+     
+(define-syntax filter_dest
+  (syntax-rules ()
+    ((_ lambda-arg-name body-form list)
+     (yail-filter-dest (lambda (lambda-arg-name) body-form) list))))
           
 (define-syntax reduceovereach
   (syntax-rules ()
@@ -2065,6 +2070,18 @@ list, use the make-yail-list constructor with no arguments.
                  (get-display-representation yail-list))
          "Bad list argument to filter")
         (kawa-list->yail-list (filter proc (yail-list-contents verified-list))))))
+
+(define (yail-filter-dest proc yail-list)
+  (let ((verified-list (coerce-to-yail-list yail-list)))
+    (if (eq? verified-list *non-coercible-value*)
+        (signal-runtime-error
+         (format #f
+                 "The second argument to filter is not a list.  The second argument is: ~A"
+                 (get-display-representation yail-list))
+         "Bad list argument to map")
+        (begin
+          (set-cdr! verified-list  (filter proc (yail-list-contents verified-list)))
+           *the-null-value*))))
          
 (define (yail-reduce ans binop yail-list)
   (define (reduce accum func lst)

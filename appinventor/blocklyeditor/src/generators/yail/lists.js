@@ -341,6 +341,18 @@ Blockly.Yail.lists_filter = function() {
 	var loopIndexName = Blockly.Yail.YAIL_LOCAL_VAR_TAG + this.getTitleValue('VAR');
 	var listCode = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || emptyListCode;
 	var bodyCode = Blockly.Yail.valueToCode(this, 'TEST', Blockly.Yail.ORDER_NONE) ||  Blockly.Yail.YAIL_FALSE;
+	
+	if (this.getTitleValue('TITLE') == Blockly.LANG_LISTS_FILTER_TITLE_FILTER) {
+		var code = Blockly.Yail.YAIL_FILTER + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
+        + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return [ code, Blockly.Yail.ORDER_ATOMIC ];
+	} else {
+		var code = Blockly.Yail.YAIL_FILTER_DEST + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
+        + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+		return code;
+	}
+	
+	
 	var code = Blockly.Yail.YAIL_FILTER + loopIndexName + Blockly.Yail.YAIL_SPACER + bodyCode + Blockly.Yail.YAIL_SPACER 
 			    + listCode + Blockly.Yail.YAIL_CLOSE_COMBINATION;
 	return [ code, Blockly.Yail.ORDER_ATOMIC ];
