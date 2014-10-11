@@ -536,10 +536,10 @@ Blockly.Blocks['lists_map'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace,'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
@@ -666,10 +666,10 @@ Blockly.Blocks['lists_filter'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace,'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
@@ -820,10 +820,10 @@ Blockly.Blocks['lists_reverse'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace,'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
@@ -897,10 +897,10 @@ Blockly.Blocks['lists_sort'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace,'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
@@ -1018,10 +1018,10 @@ Blockly.Blocks['lists_sort_comparator'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace,'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace,'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
@@ -1150,10 +1150,10 @@ Blockly.Blocks['lists_sort_key'] = {
     this.updateBlock_();
   },
   decompose: function(workspace) {
-    var containerBlock = new Blockly.Block(workspace, 'lists_mutatorcontainer');
+    var containerBlock = Blockly.Block.obtain(workspace, 'lists_mutatorcontainer');
     containerBlock.initSvg();
-    var changeListButton = containerBlock.getTitle_('CHANGE_LIST');
-    var makeNewListButton = containerBlock.getTitle_('MAKE_NEW_LIST');
+    var changeListButton = containerBlock.getField_('CHANGE_LIST');
+    var makeNewListButton = containerBlock.getField_('MAKE_NEW_LIST');
     var group = changeListButton.group;
     if (this.changeList) {
       group.setSelected(changeListButton);
