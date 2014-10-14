@@ -282,7 +282,7 @@ Blockly.FieldLexicalVariable.getLexicalNamesInScope = function (block) {
               rememberName(loopName1, loopNames, Blockly.loopParameterPrefix);
               rememberName(loopName2, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "lists_sort_key")
-                  && (parent.getInputTargetBlock('DO') == child)) {// Only DO is in scope, not other inputs!
+                  && (parent.getInputTargetBlock('KEY') == child)) {// Only DO is in scope, not other inputs!
            var loopName = parent.getTitleValue('VAR');
            rememberName(loopName, loopNames, Blockly.loopParameterPrefix);
           } else if ( (parent.type === "controls_forRange")
