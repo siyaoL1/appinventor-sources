@@ -476,12 +476,12 @@ Blockly.Blocks['lists_map'] = {
   // onchange: Blockly.WarningHandler.checkErrors,
   updateBlock_: function() {
     if (this.changeList) {
-      //this.removeInput('LIST');
-      //this.removeInput('DESCRIPTION');
-      //this.removeInput('TO');
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TO');
       this.outputConnection = null;
       
-      /*this.appendValueInput('LIST')
+      this.appendValueInput('LIST')
           .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
           .appendField(Blockly.Msg.LANG_LISTS_MAP_DEST_TITLE_MAP, 'TITLE')
           .setAlign(Blockly.ALIGN_RIGHT);
@@ -493,17 +493,17 @@ Blockly.Blocks['lists_map'] = {
                        'VAR')
           .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_TO)
           .setAlign(Blockly.ALIGN_RIGHT);
-      this.appendIndentedValueInput('TO');*/
+      this.appendIndentedValueInput('TO');
       this.setPreviousStatement(true);
       this.setNextStatement(true);
     } else {
-      //this.removeInput('LIST');
-      //this.removeInput('DESCRIPTION');
-      //this.removeInput('TO');
+      this.removeInput('LIST');
+      this.removeInput('DESCRIPTION');
+      this.removeInput('TO');
       this.previousConnection = null;
       this.nextConnection = null;
       
-      /*this.appendValueInput('LIST')
+      this.appendValueInput('LIST')
           .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT))
           .appendField(Blockly.Msg.LANG_LISTS_MAP_NONDEST_TITLE_MAP, 'TITLE')
           .setAlign(Blockly.ALIGN_RIGHT);
@@ -515,7 +515,7 @@ Blockly.Blocks['lists_map'] = {
                        'VAR')
           .appendField(Blockly.Msg.LANG_LISTS_MAP_INPUT_TO)
           .setAlign(Blockly.ALIGN_RIGHT);
-      this.appendIndentedValueInput('TO');*/
+      this.appendIndentedValueInput('TO');
       this.setOutput(true, null);
     } 
   },
