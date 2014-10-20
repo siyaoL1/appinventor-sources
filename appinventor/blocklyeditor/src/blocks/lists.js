@@ -476,6 +476,52 @@ Blockly.Blocks['lists_map'] = {
   // onchange: Blockly.WarningHandler.checkErrors,
   updateBlock_: function() {
     if (this.changeList) {
+    	 if (this.parentBlock_) {
+    		    // Remove this block from the old parent's child list.
+    		    var children = this.parentBlock_.childBlocks_;
+    		    for (var child, x = 0; child = children[x]; x++) {
+    		      if (child == this) {
+    		        children.splice(x, 1);
+    		        console.log('parents child')
+    		        console.log(children)
+    		        break;
+    		      }
+    		    }
+    		    // Move this block up the DOM.  Keep track of x/y translations.
+    		    var xy = this.getRelativeToSurfaceXY();
+    		    this.workspace.getCanvas().appendChild(this.svg_.getRootElement());
+    		    this.svg_.getRootElement().setAttribute('transform',
+    		        'translate(' + xy.x + ', ' + xy.y + ')');
+
+    		    // Disconnect from superior blocks.
+    		    this.parentBlock_ = null;
+    		    /*if (this.previousConnection && this.previousConnection.targetConnection) {
+    		      this.previousConnection.disconnect();
+    		    }*/
+    		    if (this.outputConnection && this.outputConnection.targetConnection) {
+    		    	console.log("disconnected")
+    		      this.outputConnection.disconnect();
+    		    }
+    		    // This block hasn't actually moved on-screen, so there's no need to update
+    		    // its connection locations.
+    		  } else {
+    		    // Remove this block from the workspace's list of top-most blocks.
+    		    // Note that during realtime sync we sometimes create child blocks that are
+    		    // not top level so we check first before removing.
+    		    if (goog.array.contains(this.workspace.getTopBlocks(false), this)) {
+    		      this.workspace.removeTopBlock(this);
+    		    }
+    		  }
+
+    		  this.parentBlock_ = null;
+    		  this.workspace.addTopBlock(this);
+ 
+      if (this.parentBlock_) {
+    	  this.parentBlock_render();
+      }     
+      this.render();
+      
+      
       this.outputConnection = null;
       this.setFieldValue(Blockly.Msg.LANG_LISTS_MAP_DEST_TITLE_MAP, 'TITLE');
       this.setPreviousStatement(true);
@@ -485,6 +531,7 @@ Blockly.Blocks['lists_map'] = {
       this.nextConnection = null;
       this.setFieldValue(Blockly.Msg.LANG_LISTS_MAP_NONDEST_TITLE_MAP, 'TITLE');
       this.setOutput(true, null);
+      this.render();
     } 
   },
   mutationToDom: function() {
