@@ -749,6 +749,9 @@ Blockly.Msg.en.switch_language_to_english = {
 
     Blockly.Msg.LANG_LISTS_REPLACE_ITEM_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#replace';
     Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE = 'replace list item';
+    
+    Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE_DEST = 'change existing list by'
+    Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE_NONDEST = 'make new list by'
     Blockly.Msg.LANG_LISTS_REPLACE_ITEM_INPUT_LIST = 'list';
     Blockly.Msg.LANG_LISTS_REPLACE_ITEM_INPUT_INDEX = 'index';
     Blockly.Msg.LANG_LISTS_REPLACE_ITEM_INPUT_REPLACEMENT = 'replacement';
@@ -924,7 +927,30 @@ Blockly.Msg.en.switch_language_to_english = {
     Blockly.Msg.LANG_LISTS_SORT_KEY_INPUT_COLLAPSED_TEXT = 'sort list using key';
     Blockly.Msg.LANG_LISTS_SORT_KEY_TOOLTIP = 'Sorts list using a key function that is applied to each list item'
         + ' prior to sorting. The value returned by the key function is used for sorting.';
-
+    
+    Blockly.Msg.LANG_LISTS_MIN_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_MIN_INPUT_MIN = 'minimum of list';
+    Blockly.Msg.LANG_LISTS_MIN_TOOLTIP = 'Returns minimum value of the list';
+    	
+    Blockly.Msg.LANG_LISTS_MAX_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_MAX_INPUT_MAX = 'maximum of list';
+    Blockly.Msg.LANG_LISTS_MAX_TOOLTIP = 'Returns maximum value of the list';
+    
+    Blockly.Msg.LANG_LISTS_BUT_FIRST_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_BUT_FIRST_INPUT_BUT_FIRST = 'butFirst of list';
+    Blockly.Msg.LANG_LISTS_BUT_FIRST_TOOLTIP = 'Returns everything except the first value of the list';	
+    
+    Blockly.Msg.LANG_LISTS_BUT_LAST_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_BUT_LAST_INPUT_BUT_LAST = 'butLast of list';
+    Blockly.Msg.LANG_LISTS_BUT_LAST_TOOLTIP = 'Returns everything except the last value of the list';
+    
+    Blockly.Msg.LANG_LISTS_SPLICE_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_SPLICE_INPUT = 'splice list %1 index1 %2 index2 %3';
+    Blockly.Msg.LANG_LISTS_SPLICE_TITLE_SPLICE = 'splice list';
+    Blockly.Msg.LANG_LISTS_SPLICE_TOOLTIP = 'Returns list values from index1 up to but not including index2';
+    
+    
+    
     /*Blockly.Msg.LANG_LISTS_INDEX_OF_HELPURL = 'http://publib.boulder.ibm.com/infocenter/lnxpcomp/v8v101/index.jsp?topic=%2Fcom.ibm.xlcpp8l.doc%2Flanguage%2Fref%2Farsubex.htm';
      Blockly.Msg.LANG_LISTS_INDEX_OF_TITLE_FIND = 'find';
      Blockly.Msg.LANG_LISTS_INDEX_OF_INPUT_OCCURRENCE = 'occurrence of item';
