@@ -1890,7 +1890,6 @@ list, use the make-yail-list constructor with no arguments.
           ((yail-equal? object (car list)) i)
           (else (loop (+ i 1) (cdr list))))))
 
-;Soojin
 (define (list-head lst n)
   (if (= n 0) 
     '()
@@ -1914,7 +1913,6 @@ list, use the make-yail-list constructor with no arguments.
          "List index too large")))
   (set-car! (list-tail (yail-list-contents yail-list) (- index 1)) value))
 
-;Soojin
 (define (yail-list-set-item yail-list index value)
   (if (< index 1)
       (signal-runtime-error
@@ -1963,7 +1961,6 @@ list, use the make-yail-list constructor with no arguments.
       (let ((pair-pointing-to-deletion (list-tail yail-list (- index2 1))))
         (set-cdr! pair-pointing-to-deletion (cddr pair-pointing-to-deletion))))))
 
-;Soojin
 (define (yail-list-remove-item yail-list index)
   (let ((index2 (coerce-to-number index)))
     (if (eq? index2 *non-coercible-value*)
@@ -2024,7 +2021,6 @@ list, use the make-yail-list constructor with no arguments.
             (let ((at-item (list-tail contents (- index2 2))))
               (set-cdr! at-item (cons item (cdr at-item)))))))))
               
-;Soojin
 (define (yail-list-insert-item yail-list index item)
   (let ((index2 (coerce-to-number index)))
     (if (eq? index2 *non-coercible-value*)
@@ -2071,18 +2067,7 @@ list, use the make-yail-list constructor with no arguments.
   (set-cdr! (list-tail yail-list-A (length (yail-list-contents yail-list-A)))
         (list-copy (yail-list-contents yail-list-B))))
 
-;;Soojin
 (define (yail-list-append yail-list-A yail-list-B)
-  ;; Unlike Scheme, we copy the tail so there's no shared tail
-  ;; between the augmented list and the source of the added elements.
-  ;; But like Python, we do a shallow copy, so that substructure is
-  ;; shared.
-  (define (list-copy l)
-    (if (null? l)
-    '()
-    (cons (car l) (list-copy (cdr l)))))
-  ;; We have to operate on the yail-list itself, not the contents, because
-  ;; the contents might be empty
   (kawa-list->yail-list (append (yail-list-contents yail-list-A) (yail-list-contents yail-list-B))))
 
 ;; Extend list A by appending the items to it
@@ -2091,7 +2076,6 @@ list, use the make-yail-list constructor with no arguments.
 (define (yail-list-add-to-list! yail-list . items)
   (yail-list-append! yail-list (apply make-yail-list items)))
 
-;Soojin
 (define (yail-list-add-to-list yail-list . items)
   (yail-list-append yail-list (apply make-yail-list items)))
 
