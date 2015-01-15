@@ -586,8 +586,6 @@ Blockly.Blocks['lists_replace_item'] = {
     var checkTypeList = Blockly.Blocks.Utilities.YailTypeToBlocklyType("list",Blockly.Blocks.Utilities.INPUT);
     var checkTypeNumber = Blockly.Blocks.Utilities.YailTypeToBlocklyType("number",Blockly.Blocks.Utilities.INPUT);
     var checkTypeAny = Blockly.Blocks.Utilities.YailTypeToBlocklyType("any",Blockly.Blocks.Utilities.INPUT);
-    this.appendDummyInput()
-    	.appendField(Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE_DEST, 'TITLE');
     this.interpolateMsg(Blockly.Msg.LANG_LISTS_REPLACE_ITEM_INPUT,
             ['LIST', checkTypeList, Blockly.ALIGN_RIGHT],
             ['NUM', checkTypeNumber, Blockly.ALIGN_RIGHT],
@@ -630,7 +628,6 @@ Blockly.Blocks['lists_replace_item'] = {
 	    }
 	       
 	    this.outputConnection = null;
-	    this.setFieldValue(Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE_DEST, 'TITLE');
 	    this.setPreviousStatement(true);
 	    this.setNextStatement(true);
 	    this.previousConnection.dbList_[this.previousConnection.type].addConnection_(this.previousConnection);
@@ -683,7 +680,6 @@ Blockly.Blocks['lists_replace_item'] = {
 	       
 	    this.previousConnection = null;
 	    this.nextConnection = null;
-	    this.setFieldValue(Blockly.Msg.LANG_LISTS_REPLACE_ITEM_TITLE_REPLACE_NONDEST, 'TITLE');
 	    this.setOutput(true, null);
 	    this.outputConnection.dbList_[this.outputConnection.type].addConnection_(this.outputConnection);
 	    this.render();

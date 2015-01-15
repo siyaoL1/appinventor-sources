@@ -2155,7 +2155,7 @@ list, use the make-yail-list constructor with no arguments.
          "Bad list argument to map")
          (map-destructive proc (yail-list-contents verified-list)))))
           
-(define (yail-list-filter proc yail-list)
+(define (yail-list-filter pred yail-list)
   (let ((verified-list (coerce-to-yail-list yail-list)))
     (if (eq? verified-list *non-coercible-value*)
         (signal-runtime-error
@@ -2163,9 +2163,9 @@ list, use the make-yail-list constructor with no arguments.
                  "The second argument to filter is not a list.  The second argument is: ~A"
                  (get-display-representation yail-list))
          "Bad list argument to filter")
-        (kawa-list->yail-list (filter proc (yail-list-contents verified-list))))))
+        (kawa-list->yail-list (filter pred (yail-list-contents verified-list))))))
 
-(define (yail-list-filter! proc yail-list)
+(define (yail-list-filter! pred yail-list)
   (let ((verified-list (coerce-to-yail-list yail-list)))
     (if (eq? verified-list *non-coercible-value*)
         (signal-runtime-error
@@ -2173,7 +2173,7 @@ list, use the make-yail-list constructor with no arguments.
                  "The second argument to filter is not a list.  The second argument is: ~A"
                  (get-display-representation yail-list))
          "Bad list argument to map")
-        (map-destructive proc (yail-list-contents verified-list)))))
+        (set-cdr! verified-list (filter pred (yail-list-contents verified-list))))))
          
 (define (yail-list-reduce ans binop yail-list)
   (define (reduce accum func lst)
@@ -2194,17 +2194,10 @@ list, use the make-yail-list constructor with no arguments.
           (else (append (reverse-list (cdr lst)) (list (car lst))))))
 
 (define (yail-list-reverse yl)
-  (cond ((yail-list-empty? yl) (make YailList))
-          ((not (pair? yl)) yl)
-          (else (kawa-list->yail-list (reverse-list (yail-list-contents yl))))))
+  (kawa-list->yail-list (reverse-list (yail-list-contents yl))))
 
 (define (yail-list-reverse! y1)
-  (cond ((yail-list-empty? y1) (make YailList))
-          ((not (pair? y1)) y1)
-          (else 
-            (begin
-              (set-cdr! y1 (reverse-list (yail-list-contents y1))) 
-              *the-null-value*))))
+  (set-cdr! y1 (reverse-list (yail-list-contents y1))))
 
 ;;Implements a generic sorting procedure that works on lists of any type.
          
@@ -2361,7 +2354,7 @@ list, use the make-yail-list constructor with no arguments.
           ((not (pair? y1)) y1)
           (else 
               (set-cdr! y1 (mergesort is-leq? (yail-list-contents y1))))))
-           			   	        
+                         			   	        
 (define (yail-list-sort-comparator lessthan? y1)                                           
 	(cond ((yail-list-empty? y1) (make YailList))
           ((not (pair? y1)) y1)
@@ -2399,7 +2392,7 @@ list, use the make-yail-list constructor with no arguments.
 (define (list-min lst)
   (cond ((null? lst) '())
         ((null? (cdr lst)) (car lst))
-        ((is-lt? (car lst) (list-min (cdr lst))) (car lst))
+        ((is-leq? (car lst) (list-min (cdr lst))) (car lst))
         (else (list-min (cdr lst)))))           
 
 (define (yail-list-minimum yail-list)
@@ -2409,12 +2402,12 @@ list, use the make-yail-list constructor with no arguments.
         (format #f 
                 "The list cannot be empty")
                 "Bad list argument to yail-list-minimum")
-            (list-min contents))))
+        (list-min contents))))
 
 (define (list-max lst)
-  (cond ((null? lst) 0)
+  (cond ((null? lst) '())
         ((null? (cdr lst)) (car lst))
-        ((is-lt? (list-max (cdr lst)) (car lst)) (car lst))
+        ((is-leq? (list-max (cdr lst)) (car lst)) (car lst))
         (else (list-max (cdr lst)))))
         
 (define (yail-list-maximum yail-list)
@@ -2424,7 +2417,7 @@ list, use the make-yail-list constructor with no arguments.
         (format #f 
                 "The list cannot be empty")
                 "Bad list argument to yail-list-maximum")
-            (list-max contents))))
+        (list-max contents))))
        
 (define (yail-list-but-first yail-list)
     (let ((contents (yail-list-contents yail-list)))

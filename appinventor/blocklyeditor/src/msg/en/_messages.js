@@ -928,23 +928,23 @@ Blockly.Msg.en.switch_language_to_english = {
     Blockly.Msg.LANG_LISTS_SORT_KEY_TOOLTIP = 'Sorts list using a key function that is applied to each list item'
         + ' prior to sorting. The value returned by the key function is used for sorting.';
     
-    Blockly.Msg.LANG_LISTS_MIN_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_MIN_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#min';
     Blockly.Msg.LANG_LISTS_MIN_INPUT_MIN = 'minimum of list';
     Blockly.Msg.LANG_LISTS_MIN_TOOLTIP = 'Returns minimum value of the list';
     	
-    Blockly.Msg.LANG_LISTS_MAX_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_MAX_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#max';
     Blockly.Msg.LANG_LISTS_MAX_INPUT_MAX = 'maximum of list';
     Blockly.Msg.LANG_LISTS_MAX_TOOLTIP = 'Returns maximum value of the list';
     
-    Blockly.Msg.LANG_LISTS_BUT_FIRST_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_BUT_FIRST_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#butfirst';
     Blockly.Msg.LANG_LISTS_BUT_FIRST_INPUT_BUT_FIRST = 'butFirst of list';
     Blockly.Msg.LANG_LISTS_BUT_FIRST_TOOLTIP = 'Returns everything except the first value of the list';	
     
-    Blockly.Msg.LANG_LISTS_BUT_LAST_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_BUT_LAST_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#butlast';
     Blockly.Msg.LANG_LISTS_BUT_LAST_INPUT_BUT_LAST = 'butLast of list';
     Blockly.Msg.LANG_LISTS_BUT_LAST_TOOLTIP = 'Returns everything except the last value of the list';
     
-    Blockly.Msg.LANG_LISTS_SPLICE_HELPURL = '';
+    Blockly.Msg.LANG_LISTS_SPLICE_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#splice';
     Blockly.Msg.LANG_LISTS_SPLICE_INPUT = 'splice list %1 index1 %2 index2 %3';
     Blockly.Msg.LANG_LISTS_SPLICE_TITLE_SPLICE = 'splice list';
     Blockly.Msg.LANG_LISTS_SPLICE_TOOLTIP = 'Returns list values from index1 up to but not including index2';
