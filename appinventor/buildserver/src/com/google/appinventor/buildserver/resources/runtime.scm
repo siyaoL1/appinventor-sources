@@ -2402,7 +2402,16 @@ list, use the make-yail-list constructor with no arguments.
                 "The list cannot be empty")
                 "Bad list argument to yail-list-maximum")
         (list-max contents))))
-       
+
+(define (yail-list-but-first! yail-list)
+    (let ((contents (yail-list-contents yail-list)))
+        (cond ((null? contents) (signal-runtime-error
+                                (format #f 
+                                          "The list cannot be empty")
+                                 "Bad list argument to but-first"))
+              ((null? (cdr contents)) '())
+              (else (set-cdr! yail-list (cdr contents))))))
+         
 (define (yail-list-but-first yail-list)
     (let ((contents (yail-list-contents yail-list)))
         (cond ((null? contents) (signal-runtime-error
@@ -2416,6 +2425,14 @@ list, use the make-yail-list constructor with no arguments.
     (cond ((null? lst) '())
           ((null? (cdr lst)) '())
           (else (cons (car lst) (but-last (cdr lst))))))
+
+(define (yail-list-but-last! yail-list)
+      (let ((contents (yail-list-contents yail-list)))
+        (cond ((null? contents) (signal-runtime-error
+                                (format #f 
+                                          "The list cannot be empty")
+                                 "Bad list argument to but-last"))
+              (else  (set-cdr! yail-list (but-last (yail-list-contents yail-list)))))))
 
 (define (yail-list-but-last yail-list)
       (let ((contents (yail-list-contents yail-list)))
@@ -2432,6 +2449,35 @@ list, use the make-yail-list constructor with no arguments.
 (define (back lst n1 n2)
     (cond ((= n1 (- n2 1)) '())
           (else (cons (car lst) (back (cdr lst) (+ n1 1) n2)))))
+
+(define (yail-list-splice! yail-list index1 index2)
+  (let ((verified-index1 (coerce-to-number index1))
+       (verified-index2 (coerce-to-number index2)))
+    (if (eq? verified-index1 *non-coercible-value*)
+        (signal-runtime-error
+         (format #f "Insert list item: index (~A) is not a number" (get-display-representation verified-index1))
+         "Bad list verified-index1"))
+    (if (eq? verified-index2 *non-coercible-value*)
+        (signal-runtime-error
+         (format #f "Insert list item: index (~A) is not a number" (get-display-representation verified-index2))
+         "Bad list verified-index2"))
+    (if (< verified-index1 1)
+        (signal-runtime-error
+         (format #f
+                 "Splice list: Attempt to splice list ~A at index ~A. The minimum valid index number is 1."
+                 (get-display-representation yail-list)
+                 verified-index2)
+         "List index smaller than 1"))
+    (let ((len+1 (+ (yail-list-length yail-list) 1)))
+      (if (> verified-index2 len+1)
+          (signal-runtime-error
+           (format #f
+                   "Splice list: Attempt to splice list ~A at index ~A.  The maximum valid index number is ~A."
+                   (get-display-representation yail-list)
+                   verified-index2
+                   len+1)
+           "List index too large"))
+      (set-cdr! yail-list (front (back (yail-list-contents yail-list) 0 verified-index2) verified-index1)))))
           
 (define (yail-list-splice yail-list index1 index2)
   (let ((verified-index1 (coerce-to-number index1))
@@ -2460,7 +2506,7 @@ list, use the make-yail-list constructor with no arguments.
                    verified-index2
                    len+1)
            "List index too large"))
-      (front (back (yail-list-contents yail-list) 0 verified-index2) verified-index1))))
+      (kawa-list->yail-list (front (back (yail-list-contents yail-list) 0 verified-index2) verified-index1)))))
                                           
 ;; yail-for-range needs to check that its args are numeric
 ;; because the blocks editor can't guarantee this
