@@ -911,10 +911,11 @@ Blockly.Msg.en.switch_language_to_english = {
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#sortcomparator';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_NONDEST_TITLE_SORT = 'make new sorted list from';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_DEST_TITLE_SORT = 'sort existing list';
-    Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR = 'by comparing every';
+    Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR = 'where ';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR1 = 'item1';
-    Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_AND = 'and';
+    Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_AND = 'precedes';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_VAR2 = 'item2';
+    Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COMPARATOR2 = 'if';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_INPUT_COLLAPSED_TEXT = 'sort list using comparator';
     Blockly.Msg.LANG_LISTS_SORT_COMPARATOR_TOOLTIP = 'Sorts list using a comparison function that takes in two  '
         + 'list items. The comparison function returns true or false and determines the ordering of list items.';

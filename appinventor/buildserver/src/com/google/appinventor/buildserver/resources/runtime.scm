@@ -1890,6 +1890,25 @@ list, use the make-yail-list constructor with no arguments.
           ((yail-equal? object (car list)) i)
           (else (loop (+ i 1) (cdr list))))))
 
+
+;; Implements the Blocks get list item operation
+(define (yail-list-get-item yail-list index)
+  (if (< index 1)
+      (signal-runtime-error
+       (format #f "Select list item: Attempt to get item number ~A, of the list ~A.  The minimum valid item number is 1."
+               index
+               (get-display-representation yail-list))
+       "List index smaller than 1"))
+  (let ((len (yail-list-length yail-list)))
+    (if (> index len)
+        (signal-runtime-error
+         (format #f "Select list item: Attempt to get item number ~A of a list of length ~A: ~A"
+                 index
+                 len
+                 (get-display-representation yail-list))
+         "Select list item: List index too large")
+    (list-ref (yail-list-contents yail-list) (- index 1)))))
+
 (define (list-head lst n)
   (if (= n 0) 
     '()
@@ -2283,6 +2302,10 @@ list, use the make-yail-list constructor with no arguments.
               (else #f)))
 	(helper-list-eq? (yail-list-contents y1) (yail-list-contents y2)))
 
+(define (yail-list-necessary y1)
+  (cond ((yail-list? y1) (yail-list-contents y1))
+        (else y1)))
+
 (define (list-leq? y1 y2)
   	(define (helper-list-leq? lst1 lst2)
     	(cond ((and (null? lst1) (null? lst2)) #t)
@@ -2290,7 +2313,7 @@ list, use the make-yail-list constructor with no arguments.
               ((null? lst2) #f)
               ((is-leq? (car lst1) (car lst2)) (helper-list-leq? (cdr lst1) (cdr lst2)))
               (else #f)))
-	(helper-list-leq? (yail-list-contents y1) (yail-list-contents y2)))
+	(helper-list-leq? (yail-list-necessary y1) (yail-list-necessary y2)))
 
 ;;Component are first compared using their class names. If they are instances of the same class,
 ;;then they are compared using their hashcodes.
