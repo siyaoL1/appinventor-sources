@@ -2287,13 +2287,13 @@ list, use the make-yail-list constructor with no arguments.
 	(not (and val1 (not val2))))
 
 (define (list-lt? y1 y2)
-	(define (helper-list-lt? lst1 lst2)
-		(cond ((and (null? lst1) (null? lst2)) #t)
-        	  ((null? lst1) #t)
-              ((null? lst2) #f)
-              ((is-lt? (car lst1) (car lst2)) (helper-list-lt? (cdr lst1) (cdr lst2)))
-              (else #f)))
-	(helper-list-lt? (yail-list-contents y1) (yail-list-contents y2)))
+  (define (helper-list-lt? lst1 lst2)
+    (cond ((null? lst1) (not (null? lst2)))
+          ((null? lst2) #f)
+          ((is-lt? (car lst1) (car lst2)) #t)
+          ((is-eq? (car lst1) (car lst2)) (helper-list-lt? (cdr lst1) (cdr lst2)))
+          (else #f)))
+  (helper-list-lt? (yail-list-contents y1) (yail-list-contents y2)))
 
 (define (list-eq? y1 y2)
 	(define (helper-list-eq? lst1 lst2)
@@ -2302,18 +2302,20 @@ list, use the make-yail-list constructor with no arguments.
               (else #f)))
 	(helper-list-eq? (yail-list-contents y1) (yail-list-contents y2)))
 
+;;throw exception is not yail-list
 (define (yail-list-necessary y1)
   (cond ((yail-list? y1) (yail-list-contents y1))
         (else y1)))
 
 (define (list-leq? y1 y2)
-  	(define (helper-list-leq? lst1 lst2)
-    	(cond ((and (null? lst1) (null? lst2)) #t)
-              ((null? lst1) #t)
-              ((null? lst2) #f)
-              ((is-leq? (car lst1) (car lst2)) (helper-list-leq? (cdr lst1) (cdr lst2)))
-              (else #f)))
-	(helper-list-leq? (yail-list-necessary y1) (yail-list-necessary y2)))
+  (define (helper-list-leq? lst1 lst2)
+    (cond ((and (null? lst1) (null? lst2)) #t)
+          ((null? lst1) #t)
+          ((null? lst2) #f)
+          ((is-lt? (car lst1) (car lst2)) #t)
+          ((is-eq? (car lst1) (car lst2)) (helper-list-leq? (cdr lst1) (cdr lst2)))
+          (else #f)))
+  (helper-list-leq? (yail-list-necessary y1) (yail-list-necessary y2)))
 
 ;;Component are first compared using their class names. If they are instances of the same class,
 ;;then they are compared using their hashcodes.
