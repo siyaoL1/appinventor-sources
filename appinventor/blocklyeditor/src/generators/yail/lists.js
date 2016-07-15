@@ -563,22 +563,22 @@ Blockly.Yail['lists_but_last'] = function() {
 	  }	
 	};
 
-Blockly.Yail['lists_splice'] = function() {
+Blockly.Yail['lists_slice'] = function() {
 	  var argument0 = Blockly.Yail.valueToCode(this, 'LIST', Blockly.Yail.ORDER_NONE) || Blockly.Yail.emptyListCode;
 	  var argument1 = Blockly.Yail.valueToCode(this, 'INDEX1', Blockly.Yail.ORDER_NONE) || 1;
 	  var argument2 = Blockly.Yail.valueToCode(this, 'INDEX2', Blockly.Yail.ORDER_NONE) || 1;
 	  var code = Blockly.Yail.YAIL_CALL_YAIL_PRIMITIVE;
 	  if (this.changeList) {
-		  code = code + "yail-list-splice!";
+		  code = code + "yail-list-slice!";
 	  } else {
-		  code = code + "yail-list-splice";
+		  code = code + "yail-list-slice";
 	  }
 	  code = code + Blockly.Yail.YAIL_SPACER + Blockly.Yail.YAIL_OPEN_COMBINATION + Blockly.Yail.YAIL_LIST_CONSTRUCTOR + Blockly.Yail.YAIL_SPACER;
 	  code = code + argument0 + Blockly.Yail.YAIL_SPACER + argument1;
 	  code = code + Blockly.Yail.YAIL_SPACER + argument2 + Blockly.Yail.YAIL_CLOSE_COMBINATION;
 	  code = code + Blockly.Yail.YAIL_SPACER + Blockly.Yail.YAIL_QUOTE + Blockly.Yail.YAIL_OPEN_COMBINATION;
 	  code = code + "list number number" + Blockly.Yail.YAIL_CLOSE_COMBINATION + Blockly.Yail.YAIL_SPACER;
-	  code = code + Blockly.Yail.YAIL_DOUBLE_QUOTE + "splice of list" + Blockly.Yail.YAIL_DOUBLE_QUOTE + Blockly.Yail.YAIL_CLOSE_COMBINATION;
+	  code = code + Blockly.Yail.YAIL_DOUBLE_QUOTE + "slice of list" + Blockly.Yail.YAIL_DOUBLE_QUOTE + Blockly.Yail.YAIL_CLOSE_COMBINATION;
 	  if (this.changeList) {
 		  return code;
 	  } else {

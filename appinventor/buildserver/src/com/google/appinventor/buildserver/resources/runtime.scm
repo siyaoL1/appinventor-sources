@@ -2475,7 +2475,7 @@ list, use the make-yail-list constructor with no arguments.
     (cond ((= n1 (- n2 1)) '())
           (else (cons (car lst) (back (cdr lst) (+ n1 1) n2)))))
 
-(define (yail-list-splice! yail-list index1 index2)
+(define (yail-list-slice! yail-list index1 index2)
   (let ((verified-index1 (coerce-to-number index1))
        (verified-index2 (coerce-to-number index2)))
     (if (eq? verified-index1 *non-coercible-value*)
@@ -2489,7 +2489,7 @@ list, use the make-yail-list constructor with no arguments.
     (if (< verified-index1 1)
         (signal-runtime-error
          (format #f
-                 "Splice list: Attempt to splice list ~A at index ~A. The minimum valid index number is 1."
+                 "Slice list: Attempt to slice list ~A at index ~A. The minimum valid index number is 1."
                  (get-display-representation yail-list)
                  verified-index2)
          "List index smaller than 1"))
@@ -2497,14 +2497,14 @@ list, use the make-yail-list constructor with no arguments.
       (if (> verified-index2 len+1)
           (signal-runtime-error
            (format #f
-                   "Splice list: Attempt to splice list ~A at index ~A.  The maximum valid index number is ~A."
+                   "Slice list: Attempt to slice list ~A at index ~A.  The maximum valid index number is ~A."
                    (get-display-representation yail-list)
                    verified-index2
                    len+1)
            "List index too large"))
       (set-cdr! yail-list (front (back (yail-list-contents yail-list) 0 verified-index2) verified-index1)))))
           
-(define (yail-list-splice yail-list index1 index2)
+(define (yail-list-slice yail-list index1 index2)
   (let ((verified-index1 (coerce-to-number index1))
        (verified-index2 (coerce-to-number index2)))
     (if (eq? verified-index1 *non-coercible-value*)
@@ -2518,7 +2518,7 @@ list, use the make-yail-list constructor with no arguments.
     (if (< verified-index1 1)
         (signal-runtime-error
          (format #f
-                 "Splice list: Attempt to splice list ~A at index ~A. The minimum valid index number is 1."
+                 "Slice list: Attempt to slice list ~A at index ~A. The minimum valid index number is 1."
                  (get-display-representation yail-list)
                  verified-index2)
          "List index smaller than 1"))
@@ -2526,7 +2526,7 @@ list, use the make-yail-list constructor with no arguments.
       (if (> verified-index2 len+1)
           (signal-runtime-error
            (format #f
-                   "Splice list: Attempt to splice list ~A at index ~A.  The maximum valid index number is ~A."
+                   "Slice list: Attempt to slice list ~A at index ~A.  The maximum valid index number is ~A."
                    (get-display-representation yail-list)
                    verified-index2
                    len+1)

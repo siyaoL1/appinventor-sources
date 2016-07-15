@@ -945,10 +945,10 @@ Blockly.Msg.en.switch_language_to_english = {
     Blockly.Msg.LANG_LISTS_BUT_LAST_INPUT_BUT_LAST = 'butLast of list';
     Blockly.Msg.LANG_LISTS_BUT_LAST_TOOLTIP = 'Returns everything except the last value of the list';
     
-    Blockly.Msg.LANG_LISTS_SPLICE_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#splice';
-    Blockly.Msg.LANG_LISTS_SPLICE_INPUT = 'splice list %1 index1 %2 index2 %3';
-    Blockly.Msg.LANG_LISTS_SPLICE_TITLE_SPLICE = 'splice list';
-    Blockly.Msg.LANG_LISTS_SPLICE_TOOLTIP = 'Returns list values from index1 up to but not including index2';
+    Blockly.Msg.LANG_LISTS_SLICE_HELPURL = 'http://appinventor.mit.edu/explore/ai2/support/blocks/lists#slice';
+    Blockly.Msg.LANG_LISTS_SLICE_INPUT = 'slice list %1 index1 %2 index2 %3';
+    Blockly.Msg.LANG_LISTS_SLICE_TITLE_SLICE = 'slice list';
+    Blockly.Msg.LANG_LISTS_SLICE_TOOLTIP = 'Returns list values from index1 up to but not including index2';
     
     
     
