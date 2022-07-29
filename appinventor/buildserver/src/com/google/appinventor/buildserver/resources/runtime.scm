@@ -957,6 +957,11 @@
 ;;    ((_ lambda-arg-name body-form list)
 ;;      (yail-list-map! (lambda (lambda-arg-name) body-form) list))))
 
+(define-syntax map_proc
+  (syntax-rules ()
+    ((_ _ proc list)
+      (yail-list-map proc list))))
+
 (define-syntax filter_nondest
   (syntax-rules ()
     ((_ lambda-arg-name body-form list)

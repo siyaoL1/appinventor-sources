@@ -83,6 +83,7 @@ Blockly.Yail.YAIL_SET_LEXICAL_VALUE = "(set-lexical! ";
 Blockly.Yail.YAIL_LINE_FEED = "\n";
 Blockly.Yail.YAIL_MAP = "(map_nondest ";
 Blockly.Yail.YAIL_MAP_DEST = "(map_dest ";
+Blockly.Yail.YAIL_MAP_PROC = "(map_proc ";
 Blockly.Yail.YAIL_NULL = "(get-var *the-null-value*)";
 Blockly.Yail.YAIL_EMPTY_LIST = "'()";
 Blockly.Yail.YAIL_EMPTY_YAIL_LIST = "'(*list*)";
