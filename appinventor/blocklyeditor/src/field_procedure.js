@@ -105,11 +105,12 @@ Blockly.AIProcedure.removeProcedureValues = function(name, workspace) {
     var blockArray = workspace.getAllBlocks();
     for(var i=0;i<blockArray.length;i++){
       var block = blockArray[i];
-      if(block.type == "procedures_callreturn" || block.type == "procedures_callnoreturn"
-          || block.type == "lists_map_proc") {
+      if(block.type == "procedures_callreturn" || block.type == "procedures_callnoreturn") {
         if(block.getFieldValue('PROCNAME') == name) {
           block.removeProcedureValue();
         }
+      } else if (block.type == "lists_map_proc") {
+        block.updateProcedureDropdown(true);
       }
     }
   }

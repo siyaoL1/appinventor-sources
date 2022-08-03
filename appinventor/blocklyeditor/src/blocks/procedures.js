@@ -363,6 +363,13 @@ Blockly.Blocks['procedures_defnoreturn'] = {
       this.updateParams_(params);
       Blockly.Procedures.mutateCallers(this);
     }
+    var blockArray = this.workspace.getAllBlocks();
+    for(var i=0;i<blockArray.length;i++){
+      var block = blockArray[i];
+      if (block.type == "lists_map_proc") {
+        block.updateProcedureDropdown(false);
+      }
+    }
     // console.log("exit procedures_defnoreturn compose()");
   },
   dispose: function() {

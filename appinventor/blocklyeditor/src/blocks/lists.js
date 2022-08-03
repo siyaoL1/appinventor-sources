@@ -724,7 +724,24 @@ Blockly.Blocks['lists_map_proc'] = {
     };
     options.push(option);
   },
-  removeProcedureValue: function() {
+  updateProcedureDropdown: function(removed) {
+    if (removed) { // the case where a procedure is removed
+      this.setFieldValue("none", 'PROCNAME');
+    }
+
+    var procNameArray = [];
+    var currProcName = this.getFieldValue('PROCNAME');
+    console.log("currProc name is: currProcName");
+    var procDb = this.getTopWorkspace().getProcedureDatabase();
+    var topBlocks = procDb.getDeclarationBlocks(true);
+
+
+    for (var i = 0; i < topBlocks.length; i++) {
+      console.log("currBlock name is:" + topBlocks[i].getFieldValue('NAME'));
+      if (topBlocks[i].arguments_.length == 1 && topBlocks[i].getFieldValue('NAME') == currProcName) {
+        return; // the selected procedure still exists
+      }
+    }
     this.setFieldValue("none", 'PROCNAME');
   },
   typeblock: [{ translatedName: "translatedName"}],
