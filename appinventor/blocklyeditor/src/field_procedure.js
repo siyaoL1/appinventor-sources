@@ -110,7 +110,9 @@ Blockly.AIProcedure.removeProcedureValues = function(name, workspace) {
           block.removeProcedureValue();
         }
       } else if (block.type == "lists_map_proc") {
-        block.updateProcedureDropdown(true);
+        if(block.getFieldValue('PROCNAME') == name) {
+          block.updateProcedureDropdown(true);
+        }
       }
     }
   }

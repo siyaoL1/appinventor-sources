@@ -967,6 +967,11 @@
     ((_ lambda-arg-name body-form list)
      (yail-list-filter (lambda (lambda-arg-name) body-form) list))))
 
+(define-syntax filter_proc
+  (syntax-rules ()
+    ((_ _ proc list)
+      (yail-list-filter proc list))))
+
 ;;(define-syntax filter_dest
 ;;  (syntax-rules ()
 ;;    ((_ lambda-arg-name body-form list)
@@ -976,6 +981,11 @@
   (syntax-rules ()
     ((_ initialAnswer lambda-arg1-name lambda-arg2-name body-form list)
       (yail-list-reduce initialAnswer (lambda (lambda-arg1-name lambda-arg2-name) body-form) list))))
+
+(define-syntax reduceovereach_proc
+  (syntax-rules ()
+    ((_ initialAnswer _ _ proc list)
+      (yail-list-reduce initialAnswer proc list))))
 
 (define-syntax sortcomparator_nondest
   (syntax-rules ()

@@ -660,8 +660,6 @@ Blockly.Blocks['lists_map'] = {
   typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_MAP_INPUT_COLLAPSED_TEXT }]
 };
 
-// This commented code is a map block that has a dropdown to select a procedure as a mapping function
-// There are still bugs need to be fixed so this part is commented out.
 Blockly.Blocks['lists_map_proc'] = {
   // Map a list with a specific procedure
   category: 'Lists',
@@ -731,13 +729,10 @@ Blockly.Blocks['lists_map_proc'] = {
 
     var procNameArray = [];
     var currProcName = this.getFieldValue('PROCNAME');
-    console.log("currProc name is: currProcName");
     var procDb = this.getTopWorkspace().getProcedureDatabase();
     var topBlocks = procDb.getDeclarationBlocks(true);
 
-
     for (var i = 0; i < topBlocks.length; i++) {
-      console.log("currBlock name is:" + topBlocks[i].getFieldValue('NAME'));
       if (topBlocks[i].arguments_.length == 1 && topBlocks[i].getFieldValue('NAME') == currProcName) {
         return; // the selected procedure still exists
       }
@@ -923,6 +918,54 @@ Blockly.Blocks['lists_filter'] = {
   typeblock: [{ translatedName: Blockly.Msg.LANG_LISTS_FILTER_INPUT_COLLAPSED_TEXT }]
 };
 
+Blockly.Blocks['lists_filter_proc'] = {
+  // Map a list with a specific procedure
+  category: 'Lists',
+  helpUrl: "helpUrl",
+  init: function () {
+    this.setColour(Blockly.LIST_CATEGORY_HUE);
+    var procDb = this.getTopWorkspace().getProcedureDatabase();
+    this.procNamesFxn = function() {
+      var procNameArray = [Blockly.FieldProcedure.defaultValue];
+      var topBlocks = procDb.getDeclarationBlocks(true);
+      if (topBlocks.length <= 0) {
+        return ['', ''];
+      }
+      for (var i = 0; i < topBlocks.length; i++) {
+        // console.log(topBlocks);
+        if (topBlocks[i].arguments_.length == 1) {
+          var procName = topBlocks[i].getFieldValue('NAME');
+          procNameArray.push([procName,procName]);
+        }
+      }
+
+      return procNameArray;
+    };
+
+    this.procDropDown = new Blockly.FieldDropdown(this.procNamesFxn, Blockly.FieldProcedure.onChange);
+    this.procDropDown.block = this;
+    this.appendValueInput('LIST')
+        .setCheck(Blockly.Blocks.Utilities.YailTypeToBlocklyType("list", Blockly.Blocks.Utilities.INPUT))
+        .appendField("make new filtered list from", 'TITLE')
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.appendDummyInput('PROCEDURE_CHOICE')
+        .appendField("keep each item passing test")
+        .appendField(this.procDropDown,"PROCNAME")
+        .setAlign(Blockly.ALIGN_RIGHT);
+    this.setOutput(true, null);
+    this.setTooltip("Tool Tip text");
+    this.arguments_ = [];
+    this.quarkConnections_ = null;
+    this.quarkArguments_ = null;
+    this.errors = [{name:"checkIsInDefinition"},{name:"checkDropDownContainsValidValue",dropDowns:["PROCNAME"]}];
+    Blockly.FieldProcedure.onChange.call(this.getField("PROCNAME"),this.getField("PROCNAME").getValue());
+    this.setInputsInline(false);
+  },
+  setProcedureParameters: Blockly.Blocks.lists_map_proc.setProcedureParameters,
+  procCustomContextMenu: Blockly.Blocks.lists_map_proc.procCustomContextMenu,
+  updateProcedureDropdown: Blockly.Blocks.lists_map_proc.updateProcedureDropdown,
+  typeblock: [{ translatedName: "translatedName"}],
+};
 
 Blockly.Blocks['lists_reduce'] = {
   category : 'Lists',
